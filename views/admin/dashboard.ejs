@@ -1,0 +1,215 @@
+<%- include('../partials/admin-header')%>
+<section class="content-main">
+  <div class="content-header">
+    <div>
+      <h2 class="content-title card-title">Dashboard</h2>
+    </div>
+    <div>
+      <a href="/admin/sales-report" class="btn btn-primary"
+        ><i class="text-muted material-icons md-post_add"></i>Sales report</a
+      >
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-3">
+      <div class="card card-body mb-4">
+        <article class="icontext">
+          <span class="icon icon-sm rounded-circle bg-primary-light"
+            ><i class="text-primary material-icons md-monetization_on"></i
+          ></span>
+          <div class="text">
+            <h6 class="mb-1 card-title">Revenue</h6>
+            <span><%=total%></span>
+            <span class="text-sm"> Shipping fees are not included </span>
+          </div>
+        </article>
+      </div>
+    </div>
+    <div class="col-lg-3">
+      <div class="card card-body mb-4">
+        <article class="icontext">
+          <span class="icon icon-sm rounded-circle bg-success-light"
+            ><i class="text-success material-icons md-local_shipping"></i
+          ></span>
+          <div class="text">
+            <h6 class="mb-1 card-title">Total Orders</h6>
+            <span><%= totalOrders%></span>
+            <span class="text-sm"> Excluding orders in transit </span>
+          </div>
+        </article>
+      </div>
+    </div>
+    <div class="col-lg-3">
+      <div class="card card-body mb-4">
+        <article class="icontext">
+          <span class="icon icon-sm rounded-circle bg-warning-light"
+            ><i class="text-warning material-icons md-qr_code"></i
+          ></span>
+          <div class="text">
+            <h6 class="mb-1 card-title">Total Products</h6>
+            <span><%= locals.totalProducts%></span>
+            <span class="text-sm"> In 3 Categories </span>
+          </div>
+        </article>
+      </div>
+    </div>
+    <!-- <div class="col-lg-3">
+      <div class="card card-body mb-4">
+        <article class="icontext">
+          <span class="icon icon-sm rounded-circle bg-info-light"
+            ><i class="text-info material-icons md-shopping_basket"></i
+          ></span>
+          <div class="text">
+            <h6 class="mb-1 card-title">Total</h6>
+           
+            <span class="text-sm"> Based in your local time. </span>
+          </div>
+        </article>
+      </div>
+    </div> -->
+  </div>
+  <div class="row">
+    <div class="col-xl-6 col-lg-12">
+      <div class="card mb-4">
+        <article class="card-body">
+          <h5 class="card-title">Sale statistics</h5>
+          <canvas id="myChart3" height="120px"></canvas>
+        </article>
+      </div>
+     
+    </div>
+    <div class="col-xl-3 col-lg-12">
+      <div class="card mb-4">
+        <article class="card-body">
+          <h5 class="card-title">Payment Mode</h5>
+          <canvas id="myChart4" ></canvas>
+        </article>
+      </div>
+      
+    </div>
+
+    <div class="col-xl-3 col-lg-12">
+      <div class="card mb-4">
+        <article class="card-body">
+          <h5 class="card-title">category Sales</h5>
+          <canvas id="myChart9" ></canvas>
+        </article>
+      </div>
+      
+    </div>
+
+    <div>
+      <p  id="days"style="visibility: hidden;" > <%= JSON.stringify(locals.ordersPerDay) %></p>
+      <p style="visibility: hidden;" id="payment"><%= JSON.stringify(locals.paymentCount) %> </p>
+      <p style="visibility: hidden;" id="category"> <%= JSON.stringify(locals.category) %> </p>
+
+
+    </div>
+    
+  </div>
+  
+ 
+</section>
+<!-- content-main end// -->
+<footer class="main-footer font-xs">
+  <script src="/controller/admincontroller/adminlogin.js"> </script>
+  <body>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+
+<script>
+const x1Values = [50,60,70,80,90,100,110,120,130,140,150];
+const y1Values = [7,8,8,9,9,9,10,11,14,14,15];
+
+new Chart("myChart3", {
+  type: "line",
+  data: {
+    labels: x1Values,
+    datasets: [{
+      fill: false,
+      lineTension: 0,
+      backgroundColor: "rgba(0,0,255,1.0)",
+      borderColor: "rgba(0,0,255,0.1)",
+      data: y1Values
+    }]
+  },
+  options: {
+    legend: {display: false},
+    scales: {
+      yAxes: [{ticks: {min: 6, max:16}}],
+    }
+  }
+});
+
+
+
+
+var xValues = ["COD", "Online"];
+var yValues = [];
+let paymentData= JSON.parse(document.getElementById('payment').innerHTML)
+
+
+console.log(yValues,"y");
+
+yValues.push(paymentData[0])
+
+yValues.push(paymentData[1])
+
+var barColors = [
+  "#b91d47",
+  "#00aba9",
+  "#2b5797",
+  
+];
+
+
+new Chart("myChart4", {
+  type: "pie",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: yValues
+    }]
+  },
+  options: {
+    title: {
+      display: true,
+      text: "Based on Payment "
+    }
+  }
+});
+
+
+var xValues = ["Men", "Women"];
+var yValues = [];
+var barColors = ["green","blue"];
+ let categoryData=JSON.parse(document.getElementById('category').innerHTML)
+
+ yValues.push(categoryData[0])
+ yValues.push(categoryData[1])
+ console.log(yValues,"99999999");
+ 
+new Chart("myChart9", {
+  type: "bar",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: yValues
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+      text: "Based on Category Sales"
+    }
+  }
+});
+
+
+</script>
+
+   

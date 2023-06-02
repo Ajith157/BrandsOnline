@@ -1,0 +1,82 @@
+<div class="container">
+  <section class="content-main mt-80 mb-80">
+    <div class="card mx-auto card-login">
+      <div class="card-body">
+        <h4 class="card-title mb-4">Admin Login</h4>
+        <p id="error" class="text-danger"></p>
+        <form class="p-10 ">
+          <div class="mb-3">
+            <input class="form-control" id="email" name="email"  placeholder="Email" type="text">
+            <p id="error1" class="text-danger"></p>
+          </div>
+          <div class="mb-3">
+            <input class="form-control" id="password" name="password" placeholder="Password" type="password">
+            <p id="error1" class="text-danger"></p>
+          </div> 
+          <div class="mb-3">
+            <a href="#" class="float-end font-sm text-muted">Forgot password?</a>
+            <label class="form-check">
+              <input type="checkbox" class="form-check-input" checked="">
+              <span class="form-check-label">Remember</span>
+            </label>
+          </div>
+          <div class="mb-4">
+            <button type="button" onclick="validate()" class="btn btn-primary w-100"> Login </button>
+          </div> <!-- form-group// -->
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+
+ <script>
+  function validate() {
+    const email = document.getElementById('email')
+    const password = document.getElementById('password')
+
+    const emailValue = email.value.trim()
+    const passwordValue = password.value.trim()
+
+    let error1 = email.parentElement.querySelector('p')
+    let error2 = password.parentElement.querySelector('p')
+
+    error1.innerText = ""
+    error2.innerText = ""
+
+    let flag = 1
+
+    if (emailValue == '') {
+      error1.innerText = "Field is required"
+      flag=2
+    }
+    if (passwordValue == '') {
+      error2.innerText = "Field is required"
+      flag=2
+    }
+
+    if (flag == 1) {
+      submit(emailValue, passwordValue)
+    }
+  }
+
+  function submit(email, password){
+   
+    $.ajax({
+      url: '/admin',
+      method: 'post',
+      data: {
+        email: email,
+        password: password
+      },
+      success(response) {
+
+        if (response) {
+            location.href = '/admin/dashboard'
+        }else{
+            document.getElementById('error').innerText = "Email or password is incorrect"
+        }
+      }
+    })
+  }
+</script> 

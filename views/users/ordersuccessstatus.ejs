@@ -1,0 +1,121 @@
+<%- include('../partials/user-header')%>
+
+<style>
+    .card {
+        max-width: 800px; /* Decrease the width as desired */
+        margin: 0 auto;
+        height: 500px;
+    }
+.card-body {
+        padding: 20px;
+    }
+
+    .progress {
+        margin-bottom: 20px;
+    }
+
+    .progress-bar {
+        border-radius: 16px;
+        background-color: #4fa051;
+    }
+
+    .progress-bar.active {
+        animation: progressAnimation 3s linear infinite;
+    }
+
+    @keyframes progressAnimation {
+        0% {
+            width: 0%;
+        }
+        100% {
+            width: 100%;
+        }
+    }
+
+    .track-order-text {
+        margin-top: 10px;
+        margin-bottom: 0;
+        font-size: 12px;
+        font-weight: 500;
+        color: #6c757d;
+    }
+
+    .track-order-step {
+        margin-bottom: 0;
+        font-size: 12px;
+        font-weight: 500;
+        color: #6c757d;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+</style>
+
+  
+
+</style>
+
+<h5 class="text-muted mb-0">
+    Thanks for your Order, <span style="color: #b00734"></span>!
+  </h5>
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <p class="lead fw-normal mb-0" style="color: #a8729a;">Receipt</p>
+              <p class="small text-muted mb-0">Receipt Voucher : 1KAU9-84UIL</p>
+            </div>
+
+
+
+            <div class="card shadow-0 border mb-4">
+              <div class="card-body">
+                
+                <div class="row">
+                  <div class="col-md-2">
+                    <img src="/uploads/<%=lastorder.productDetails[0]?.image[0]%>" class="img-fluid" alt="Phone">
+                  </div>
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0"><%=lastorder.productDetails[0]?.productName%></p>
+                  </div>
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0 small">Brand: <%=lastorder.productDetails[0]?.brand%></p>
+                  </div>
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0 small">Category: <%=lastorder.productDetails[0]?.category%></p>
+                  </div>
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0 small">Qty:<%=lastorder.productDetails[0]?.quantity%></p>
+                  </div>
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0 small">₹<%=lastorder.productDetails[0]?.productPrice%></p>
+                  </div>
+                </div>
+                
+                <hr class="mb-4" style="background-color: #e0e0e0; opacity: 1;">
+                <div class="row d-flex align-items-center">
+                  <div class="col-md-2">
+                    <p class="text-muted mb-0 small">Track Order</p>
+                  </div>
+                  <div class="col-md-10">
+                    <div class="progress" style="height: 6px; border-radius: 16px;">
+                      <div id="progress-bar" class="progress-bar" role="progressbar" style="border-radius: 16px; background-color: #4fa051;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-around mb-1">
+                      <p class="text-muted mt-1 mb-0 small ms-xl-5">Packed & ready to ship</p>
+                      <p class="text-muted mt-1 mb-0 small ms-xl-5">Out for delivery</p>
+                      <p class="text-muted mt-1 mb-0 small ms-xl-5">Delivered</p>
+                    </div>
+                    
+                  </div>
+                  <div class="d-flex justify-content-center mt-4">
+                    <a class="btn btn-primary" href="/shop"><i class="fi-rs-shopping-bag mr-2"></i>Continue Shopping</a>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+         
+
+
+            
+            <%- include('../partials/user-footer')%>

@@ -1,0 +1,130 @@
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12 m-auto">
+      <div class="row">
+
+        <!-- <div class="col-lg-1" > -->
+          <div class="d-flex justify-content-center align-items-center"  style="height: 100vh;">
+
+          <div class="col-lg-6 mx-auto">
+
+
+
+            <div class="padding_eight_all" style="background: rgb(223, 223, 223);">
+
+              <div class="heading_s1">
+                <h3 class="" style="text-align: center;padding-top: 25px;">Create an Account</h3>
+              </div>
+              <p id="errorEmail" class="text-danger"></p>
+              <p class="mb-50 font-sm">
+              </p>
+              <form id="signup" action="/signup" method="post">
+                <div class="form-group ml-50">
+                  <input type="text" required="" id="userName" name="username" placeholder="Username"
+                    autocomplete="off">
+                  <p id="usernameerr" class="text-danger"></p>
+                </div>
+                <div class="form-group ml-50">
+                  <input type="text" required="" id="email" name="email" placeholder="Email" autocomplete="off">
+                  <p id="Emailerr" class="text-danger"></p>
+                </div>
+                <div class="form-group ml-50">
+                  <input type="text" required="" id="mobile" name="mobile" placeholder="Mobile Number"
+                    autocomplete="off">
+                  <p id="moberror" class="text-danger"></p>
+                </div>
+                <div class="form-group ml-50">
+                  <input required="" type="password" id="password" name="password" placeholder="Password"
+                    autocomplete="off">
+                  <p id="passworderr" class="text-danger"></p>
+                </div>
+                <div class="form-group ml-50">
+                  <input required="" type="password" id="cPassword" placeholder="Confirm password" autocomplete="off">
+                  <p id="cPassworderr" class="text-danger"></p>
+                </div>
+                <div class="login_footer form-group ml-50">
+                  <div class="chek-form">
+                    <div class="custome-checkbox">
+                      <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox12" value=""
+                        required>
+                      <label class="form-check-label" for="exampleCheckbox12"><span>I agree to terms &amp;
+                          Policy.</span></label>
+                    </div>
+                  </div>
+                  <!-- <a href="page-privacy-policy.html"><i class="fi-rs-book-alt mr-5 text-muted"></i>Lean more</a> -->
+                </div>
+                <div class="form-group d-flex justify-content-center">
+                  <button type="submit" onclick="validate()" class="btn btn-fill-out btn-block hover-up "
+                    name="login">Submit</button>
+                </div>
+              </form>
+              <div class="divider-text-center mt-15 mb-15">
+                <span> or</span>
+              </div>
+
+              <div class="text-muted text-center mb-10">Already have an account? <a href="/login">Login now</a></div>
+              <br>
+            </div>
+            <!-- </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </section>
+  </main>
+  <script>
+    function validate() {
+      // Get form input values
+      const username = document.getElementById('userName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const mobile = document.getElementById('mobile').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const cPassword = document.getElementById('cPassword').value.trim();
+
+      // Define regex patterns for validation
+      const usernameRegex = /^[a-zA-Z0-9_]{5,20}$/;
+      const emailRegex = /^\S+@\S+\.\S+$/;
+      const mobileRegex = /^\d{10}$/;
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+      // Check if username is valid
+      if (!usernameRegex.test(username)) {
+        document.getElementById('usernameerr').innerHTML = 'Invalid username (must be alphanumeric with length between 5 and 20)';
+        return false;
+      }
+
+      // Check if email is valid
+      if (!emailRegex.test(email)) {
+        document.getElementById('Emailerr').innerHTML = 'Invalid email address';
+        return false;
+      }
+
+      // Check if mobile number is valid
+      if (!mobileRegex.test(mobile)) {
+        document.getElementById('moberror').innerHTML = 'Invalid mobile number (must be 10 digits)';
+        return false;
+      }
+
+      // Check if password is valid
+      if (!passwordRegex.test(password)) {
+        document.getElementById('passworderr').innerHTML = 'Invalid password (must be at least 8 characters, contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character)';
+        return false;
+      }
+
+      // Check if password and confirm password match
+      if (password !== cPassword) {
+        document.getElementById('cPassworderr').innerHTML = 'Passwords do not match';
+        return false;
+      }
+
+      // Check if terms and policy checkbox is checked
+      if (!document.getElementById('exampleCheckbox12').checked) {
+        document.getElementById('err').innerHTML = 'Please agree to the terms and policy';
+        return false;
+      }
+
+      return true;
+    }
+
+  </script>

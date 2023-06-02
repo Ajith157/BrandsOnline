@@ -1,0 +1,125 @@
+<%- include('../partials/admin-header')%>
+<div >
+  <span><a href="/admin/dashboard">DASHBOARD</a> >> <a href="#">PRODUCTLIST</a></span>
+</div>
+<section class="content-main">
+  <style>
+    span a {
+      font-weight: bold;
+      color: black;
+    }
+    </style>
+  
+  <div class="content-header">
+    <div>
+      <h2 class="content-title card-title">Products List</h2>
+    </div>
+    <div>
+      <!-- <a href="/admin/addproduct" class="btn btn-primary btn-sm rounded">Add Products</a> -->
+    </div>
+  </div>
+  <div class="card mb-4">
+    <div class="card-body">
+      <table class="table align-middle table-nowrap mb-0 display" id="productList">
+        <thead>
+          <tr>
+            <th>
+              No.
+            </th>
+            <th>
+              Image
+            </th>
+            <th>
+              Name
+            </th>
+            <th>
+              Brand
+            </th>
+            <th>
+              Price
+            </th>
+            <th>
+              Quantity
+            </th>
+            <th>
+              Catogory
+            </th>
+            <th>
+              <!-- <button>btn</button> -->
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <% product.forEach((item,index)=>{%>
+          <tr>
+            <td>
+              <%= index+1 %>
+            </td>
+            <td>
+              <img style="border-radius:0;height: 100px;width: 100px;" src="/uploads/<%= item.img[0] %>" alt="img">
+            </td>
+            <td>
+              <%= item.name %>
+            </td>
+            <td>
+              <%= item.brand %>
+
+            </td>
+            <td>
+              ₹<%= item.price%>
+            </td>
+
+            <td>
+              <%= item.quantity %>
+            </td>
+
+            <td>
+              <%= item.category %>
+            </td>
+
+            <td>
+              <a href="/admin/editproduct/<%=item._id%>"> <button class="btn btn-info btn-sm">Edit</button></a>
+              <a href="#" onclick="deleteProduct('<%= item._id %>')"><button class="btn btn-danger btn-sm">Delete</button></a>
+            </td>
+          </tr>
+          <% })%>
+    </div> <!-- card-body end// -->
+  </div> <!-- card end// -->
+
+</section> <!-- content-main end// -->
+
+
+
+<script>
+  function deleteProduct(proId){
+    swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this product!!!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((willDelete) => {
+        if (willDelete) {
+          $.ajax({
+            url: '/admin/deleteProduct/' + proId,
+            method: 'delete',
+            success(response) {
+              if(response.status){
+                swal("Product has been deleted!", {
+                  icon: "success",
+                }).then(()=>{
+                  location.reload()
+                })
+              }else{
+                swal("Oops!", "Something went wrong. product not deleted!", "error");
+              }
+            }
+          })
+        }else{
+          swal("product is safe!");
+        }
+      })
+
+  }
+</script>
