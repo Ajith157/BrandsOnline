@@ -131,7 +131,7 @@ module.exports = {
             product = await userHelper.getShop()
             if (product.length != 0)
                 req.session.noProductFound = false
-            res.render('users/shop', { layout: 'Layout', product, user, productResult: req.session.noProduct })
+            res.render('users/shop', { product, user, productResult: req.session.noProduct })
             req.session.noProductFound = false
 
         }
