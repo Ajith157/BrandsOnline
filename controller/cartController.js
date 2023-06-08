@@ -11,41 +11,42 @@ module.exports = {
   // ADD TO CART
   addToCart: (req, res) => {
 
-   
+
     try {
       let userId = req.session.user[0]._id
-      console.log(userId);
+
       cartHelper.addTocart(req.params.id, userId).then((response) => {
-  
+
+
         res.send(response)
       })
-      
-    } catch (error) {
-      res.render("users/catchError",{message:error.message})
 
-      
+    } catch (error) {
+      res.render("users/catchError", { message: error.message })
+
+
     }
   },
   // get cart page
   getCart: async (req, res) => {
 
-    
+
     try {
-          console.log(req.session.user);
-          let userId = req.session.user[0]._id
-          let user = req.session.user
-          let count = await cartHelper.getCartCount(userId)
-          let total = await orderHelper.totalCheckOutAmount(userId)
-          req.session.Total = total
-          let subTotal = await orderHelper.getSubTotal(userId)
-          cartHelper.getCartItems(userId).then((cartItems) => {
-      
-      
-      
-            res.render('users/cart', { user, cartItems, count, total, subTotal })
-          })
+
+      let userId = req.session.user[0]._id
+      let user = req.session.user
+      let count = await cartHelper.getCartCount(userId)
+      let total = await orderHelper.totalCheckOutAmount(userId)
+      req.session.Total = total
+      let subTotal = await orderHelper.getSubTotal(userId)
+      cartHelper.getCartItems(userId).then((cartItems) => {
+
+
+
+        res.render('users/cart', { user, cartItems, count, total, subTotal })
+      })
     } catch (error) {
-      res.render("users/catchError",{message:error.message})
+      res.render("users/catchError", { message: error.message })
     }
 
 
@@ -62,7 +63,7 @@ module.exports = {
   },
   /* Delete product from cart*/
   deleteProduct: (req, res) => {
-    
+
     cartHelper.deleteProduct(req.body).then((response) => {
       res.send(response)
     })

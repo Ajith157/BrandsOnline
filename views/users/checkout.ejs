@@ -43,7 +43,7 @@
     </div>
       <!-- coupon dropdown div end -->
 
-      <div class="row">
+      <div class="row"  style="margin-left: 100px;">
         <div class="col-md-6">
           <div class="mb-25">
             <h4>Billing Details</h4>
@@ -51,7 +51,7 @@
           <form id="checkOut-form">
             <input name="user" value="<%=user[0]._id%>" type="hidden">
             <input name="total" value="<%=total%>" type="hidden">
-            <input id="cartId" name="cartID" type="hidden" value="<%=cartItems[0]._id%>">
+            <input id="cartId" name="cartID" type="hidden" value="<%=cartItems[0]?._id%>">
             <div id="address-container" style="max-height: 400px; overflow-y: scroll; margin-right: 250px; ">
               <div class="card-deck">
                 <% address?.Address.forEach(function(item,index) { %>

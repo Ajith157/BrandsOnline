@@ -1,82 +1,87 @@
+
+
 <div class="container">
   <section class="content-main mt-80 mb-80">
     <div class="card mx-auto card-login">
       <div class="card-body">
         <h4 class="card-title mb-4">Admin Login</h4>
         <p id="error" class="text-danger"></p>
-        <form class="p-10 ">
+        <form class="p-10" id="loginForm" action="/admin/login" method="POST">
           <div class="mb-3">
-            <input class="form-control" id="email" name="email"  placeholder="Email" type="text">
+            <input class="form-control" id="email" name="email" placeholder="Email" type="text">
             <p id="error1" class="text-danger"></p>
           </div>
           <div class="mb-3">
             <input class="form-control" id="password" name="password" placeholder="Password" type="password">
-            <p id="error1" class="text-danger"></p>
-          </div> 
+            <p id="error2" class="text-danger"></p>
+          </div>
           <div class="mb-3">
-            <a href="#" class="float-end font-sm text-muted">Forgot password?</a>
             <label class="form-check">
               <input type="checkbox" class="form-check-input" checked="">
               <span class="form-check-label">Remember</span>
             </label>
           </div>
           <div class="mb-4">
-            <button type="button" onclick="validate()" class="btn btn-primary w-100"> Login </button>
-          </div> <!-- form-group// -->
+            <button type="button" onclick="validate()" class="btn btn-primary w-100">Login</button>
+          </div>
         </form>
       </div>
     </div>
   </section>
 </div>
 
+<!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> -->
 
- <script>
+
+
+
+
+<script>
   function validate() {
-    const email = document.getElementById('email')
-    const password = document.getElementById('password')
-
-    const emailValue = email.value.trim()
-    const passwordValue = password.value.trim()
-
-    let error1 = email.parentElement.querySelector('p')
-    let error2 = password.parentElement.querySelector('p')
-
-    error1.innerText = ""
-    error2.innerText = ""
-
-    let flag = 1
-
-    if (emailValue == '') {
-      error1.innerText = "Field is required"
-      flag=2
+    
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const emailValue = email.value.trim();
+    const passwordValue = password.value.trim();
+    let error1 = document.getElementById('error1');
+    let error2 = document.getElementById('error2');
+    error1.innerText = "";
+    error2.innerText = "";
+    let flag = 1;
+    if (emailValue === '') {
+      error1.innerText = "Field is required";
+      flag = 2;
     }
-    if (passwordValue == '') {
-      error2.innerText = "Field is required"
-      flag=2
+    if (passwordValue === '') {
+      error2.innerText = "Field is required";
+      flag = 2;
     }
-
-    if (flag == 1) {
-      submit(emailValue, passwordValue)
+    if (flag === 1) {
+      const form = document.getElementById('loginForm');
+    form.action = "/admin/login"; // Specify the URL to send the form data to
+    form.submit(); // Submit the form
+      
     }
   }
 
-  function submit(email, password){
-   
-    $.ajax({
-      url: '/admin',
-      method: 'post',
-      data: {
-        email: email,
-        password: password
-      },
-      success(response) {
 
-        if (response) {
-            location.href = '/admin/dashboard'
-        }else{
-            document.getElementById('error').innerText = "Email or password is incorrect"
-        }
-      }
-    })
-  }
-</script> 
+  // function submit(email, password) {
+  //   console.log('sssssssssssssssssssssss');
+  //   $.ajax({
+    
+  //     url: '/admin/login',
+  //     method: 'POST',
+  //     data: {
+  //       email: email,
+  //       password: password
+  //     },
+  //     success: function(response) {
+  //       if (response) {
+  //         location.href = '/admin/dashboard';
+  //       } else {
+  //         document.getElementById('error').innerText = "Email or password is incorrect";
+  //       }
+  //     }
+  //   });
+  // }
+</script>

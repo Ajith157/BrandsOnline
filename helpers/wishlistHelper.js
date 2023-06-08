@@ -1,27 +1,27 @@
-const wishListModel=  require('../model/schema')
+const wishListModel = require('../model/schema')
 const { ObjectId } = require('mongodb');
 
-module.exports={
+module.exports = {
 
     //to get the total count of wishlist
-     getWishlistcount:(userId)=>{
+    getWishlistcount: (userId) => {
 
-        try{
-            return new Promise((resolve,reject)=>{
-                let count=0;
-                wishListModel.Wishlist.findOne({user:userId}).then((userWishlist)=>{
-                    if(userWishlist){
-                        count=userWishlist.wishList.length
+        try {
+            return new Promise((resolve, reject) => {
+                let count = 0;
+                wishListModel.Wishlist.findOne({ user: userId }).then((userWishlist) => {
+                    if (userWishlist) {
+                        count = userWishlist.wishList.length
                     }
                     resolve(count)
                 })
             })
         }
-        catch(error){
-            console.log(error.message);
+        catch (error) {
+            res.render("users/catchError", { message: error.message })
         }
     },
-  
+
 
     //to get wishlist
     getwishlistProducts: (userId) => {
@@ -58,18 +58,18 @@ module.exports={
                         }
                     }
                 ]).then((wishListed) => {
-                    console.log(wishListed,'wishListed');
+
                     resolve(wishListed)
                 })
             })
         } catch (error) {
-            console.log(error.message);
+            res.render("users/catchError", { message: error.message })
         }
 
     },
     //add to wishList
     addWishList: (userId, proId) => {
-       
+
         try {
             return new Promise((resolve, reject) => {
                 wishListModel.Wishlist.findOne({ user: new ObjectId(userId) }).then((userWishList) => {
@@ -104,7 +104,7 @@ module.exports={
                 });
             });
         } catch (error) {
-            console.log(error.message);
+            res.render("users/catchError", { message: error.message })
         }
     },
     //remove product from wishList
@@ -121,7 +121,7 @@ module.exports={
                 })
             })
         } catch (error) {
-            console.log(error.message);
+            res.render("users/catchError", { message: error.message })
         }
     }
 

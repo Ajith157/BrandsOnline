@@ -4,48 +4,41 @@
             <div class="row align-items-center">
                 <div class="col-xl-3 col-lg-4">
                     <div class="header-info">
+
                         <ul>
                             <li><i class="fi-rs-smartphone"></i> <a href="#">(+01) - 2345 - 6789</a></li>
-                            <li><i class="fi-rs-marker"></i><a  href="page-contact.html">Our location</a></li>
+                            <li><i class="fi-rs-marker"></i><a href="#">Our location</a></li>
                         </ul>
                     </div>
                 </div>
                 <div class="col-xl-6 col-lg-4">
                     <div class="text-center">
-                        <div id="news-flash" class="d-inline-block">
-                            <ul>
-                                <li>Get great devices up to 50% off <a href="shop-grid-right.html">View details</a></li>
-                                <li>Supper Value Deals - Save more with coupons</li>
-                                <li>Trendy 25silver jewelry, save up 35% off today <a href="shop-grid-right.html">Shop now</a></li>
-                            </ul>
-                        </div>
+
+
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4">
                     <div class="header-info header-info-right">
                         <ul>
-                            <li>
-                                <a class="language-dropdown-active" href="#"> <i class="fi-rs-world"></i> English <i class="fi-rs-angle-small-down"></i></a>
-                                <ul class="language-dropdown">
-                                    <li><a href="#"><img src="/userAssets/imgs/theme/flag-fr.png" alt="">Français</a></li>
-                                    <li><a href="#"><img src="/userAssets/imgs/theme/flag-dt.png" alt="">Deutsch</a></li>
-                                    <li><a href="#"><img src="/userAssets/imgs/theme/flag-ru.png" alt="">Pусский</a></li>
-                                </ul>
-                            </li>
+
+
                             <% if(locals?.user){ %>
                                 <li>
-                                  <i class="fi-rs-user"></i>
-                                  <%= user.username %>
-                                  <button class="logout-button" onclick="location.href='/logout'" style="background-color: rgb(230, 71, 71);border-radius: 10px; color: white;">Logout</button>
+                                    <i class="fi-rs-user"></i>
+                                    <%= user[0]?.username %>
+                                        <button class="logout-button" onclick="location.href='/logout'"
+                                            style="background-color: rgb(230, 71, 71);border-radius: 10px; color: white;">Logout</button>
                                 </li>
-                              <% } else { %>
-                                <li>
-                                  <i class="fi-rs-user"></i>
-                                  <button class="login-button" onclick="location.href='/login'" style="background-color: green; border-radius: 10px;color:  white;">Log In</button>
-                                </li>
-                              <% } %>
-                              
-                              
+                                <% } else { %>
+                                    <li>
+                                        <i class="fi-rs-user"></i>
+                                        <button class="login-button" onclick="location.href='/login'"
+                                            style="background-color: green; border-radius: 10px;color:  white;">Log
+                                            In</button>
+                                    </li>
+                                    <% } %>
+
+
                             </li>
                         </ul>
                     </div>
@@ -56,57 +49,65 @@
     <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
         <div class="container">
             <div class="header-wrap">
-                <div class="logo logo-width-1">
-                    <a href="/shop"><img src="https://api.logo.com/api/v2/images?logo=logo_bdab2179-59f1-434c-b32e-d5e75e9f12c9&format=webp&margins=0&quality=60&width=500&background=transparent&u=1685519542" alt="logo"></a>
+                <div class="logo logo-width-1" style="display: flex; align-items: center;">
+                    <a href="/shop">
+                        <img style="margin-right: 50px;" src="https://api.logo.com/api/v2/images?logo=logo_bdab2179-59f1-434c-b32e-d5e75e9f12c9&format=webp&margins=0&quality=60&width=500&background=transparent&u=1685519542"
+                            alt="logo">
+                    </a>
+                    <a href="/" style="margin-left: 10px; font-weight: bold; color: green;">Home</a>
+                    <a href="/shop" style="margin-left: 10px; font-weight: bold; color: green;">Shop</a>
+                   
+ <!-- Add your order link with inline style -->
                 </div>
+                
+                
+                
+              
+
+
+
+
                 <div class="header-right">
                     <div class="search-style-2">
-                        <form action="#">
-                         
-                            
-                        </form>
+                        <form action="#"></form>
                     </div>
                     <div class="header-action-icon-2">
                         <% if(locals?.user){ %>
-    
-                        <a href="/get-profile">
-                            <img class="svgInject" alt="" style="max-width: 50px;" src="https://tse1.mm.bing.net/th?id=OIP.BAdrtOmCjHMDXWlyWKB3YAHaHa&pid=Api&P=0">
-                            <span class="pro-count blue"></span>
-                        </a>
+                            <a href="/get-profile">
+                                <img class="svgInject" alt="" style="max-width: 50px;"
+                                    src="https://tse1.mm.bing.net/th?id=OIP.BAdrtOmCjHMDXWlyWKB3YAHaHa&pid=Api&P=0">
+                                <span class="pro-count blue"></span>
+                            </a>
                     </div>
                     <div class="header-action-right">
                         <div class="header-action-2">
                             <div class="header-action-icon-2">
                                 <a href="/wishlist">
-                                    <img class="svgInject" alt="Evara" src="/userAssets/imgs/theme/icons/icon-heart.svg">
-                                    <span class="pro-count blue"></span>
+                                    <img class="svgInject" alt="Evara"
+                                        src="/userAssets/imgs/theme/icons/icon-heart.svg">
                                 </a>
                             </div>
-
                             <div class="header-action-icon-2">
                                 <a class="mini-cart-icon" href="/cart-list">
                                     <img alt="Evara" src="/userAssets/imgs/theme/icons/icon-cart.svg">
-                                    <span class="pro-count blue"></span>
                                 </a>
-                                
-                                            
-                                         
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
-                    <%}%>
                 </div>
+                <%}%>
             </div>
         </div>
+
+
     </div>
+
     <div class="header-bottom header-bottom-bg-color sticky-bar">
         <div class="container">
             <div class="header-wrap header-space-between position-relative">
-                <!-- <div class="logo logo-width-1 d-block d-lg-none">
+                <div class="logo logo-width-1 d-block d-lg-none">
                     <a href="index.html"><img src="/userAssets/imgs/theme/logo.svg" alt="logo"></a>
-                </div> -->
+                </div>
                 <!-- <div class="header-nav d-none d-lg-flex">
                     <div class="main-categori-wrap d-none d-lg-block">
                         <a class="categori-button-active" href="#">
@@ -257,7 +258,7 @@
                         </nav>
                     </div>
                 </div> -->
-              
+
                 <p class="mobile-promotion">Happy <span class="text-brand">Mother's Day</span>. Big Sale Up to 40%</p>
                 <div class="header-action-right d-block d-lg-none">
                     <div class="header-action-2">
@@ -276,7 +277,8 @@
                                 <ul>
                                     <li>
                                         <div class="shopping-cart-img">
-                                            <a href="shop-product-right.html"><img alt="Evara" src="/userAssets/imgs/shop/thumbnail-3.jpg"></a>
+                                            <a href="shop-product-right.html"><img alt="Evara"
+                                                    src="/userAssets/imgs/shop/thumbnail-3.jpg"></a>
                                         </div>
                                         <div class="shopping-cart-title">
                                             <h4><a href="shop-product-right.html">Plain Striola Shirts</a></h4>
@@ -288,9 +290,10 @@
                                     </li>
                                     <li>
                                         <div class="shopping-cart-img">
-                                            <a href="shop-product-right.html"><img alt="Evara" src="/userAssets/imgs/shop/thumbnail-4.jpg"></a>
+                                            <a href="shop-product-right.html"><img alt="Evara"
+                                                    src="/userAssets/imgs/shop/thumbnail-4.jpg"></a>
                                         </div>
-                                       
+
                                         <div class="shopping-cart-delete">
                                             <a href="#"><i class="fi-rs-cross-small"></i></a>
                                         </div>
@@ -300,7 +303,7 @@
                                     <div class="shopping-cart-total">
                                         <h4>Total <span>$383.00</span></h4>
                                     </div>
-                                  
+
                                     <div class="shopping-cart-button">
                                         <a href="shop-cart.html">View cart</a>
                                         <a href="shop-checkout.html">Checkout</a>

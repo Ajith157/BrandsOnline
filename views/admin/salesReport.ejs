@@ -10,7 +10,7 @@
 <div class="main_container m-5">
     <div class="text-center">
         <h1>Sales Report</h1>
-      <button type="button" class="btn btn-secondary btn_print m-3" value="Download as Pdf"><i class="fas fa-file-pdf"></i> Download as PDF</button>
+      <button type="button" class="btn btn-secondary btn_print m-3" onclick="downloadAsPDF()" value="Download as Pdf"><i class="fas fa-file-pdf"></i> Download as PDF</button>
   
       <button type="button" class="btn btn-secondary btn_print m-3" onclick="export_data()" value="Export to excel"><i class="fas fa-file-excel"></i> Download as Excel</button>
   
@@ -147,6 +147,14 @@ flatpickr(".flatpickr", {
               html2pdf().set(opt).from(element).save();
           });
       });
+
+
+      
+      function downloadAsPDF() {
+  const element = document.getElementById('container_content');
+  html2pdf().from(element).save();
+}
+
   
   
   

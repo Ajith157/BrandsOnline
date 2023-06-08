@@ -1,27 +1,27 @@
-const couponModel=require('../model/schema')
+const couponModel = require('../model/schema')
 const voucherCode = require('voucher-code-generator')
-const userModel=require('../model/schema')
+const userModel = require('../model/schema')
 
 
 
 
-module.exports={
+module.exports = {
 
-    generatorCouponCode:()=>{
-        return new Promise(async(resolve,reject)=>{
-            try{
+    generatorCouponCode: () => {
+        return new Promise(async (resolve, reject) => {
+            try {
                 let couponCode = voucherCode.generate({
-                    length:6,
-                    count:1,
-                    charset:"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-                    prefix:"promo-",
+                    length: 6,
+                    count: 1,
+                    charset: "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+                    prefix: "promo-",
 
 
                 })
-                resolve({status:true,couponCode:couponCode[0]});
+                resolve({ status: true, couponCode: couponCode[0] });
             }
-            catch(error){
-                console.log(error.message);
+            catch (error) {
+                res.render("users/catchError", { message: error.message })
             }
         })
     },
@@ -35,32 +35,32 @@ module.exports={
                         resolve({ status: false })
                     } else {
                         couponModel.Coupon(data).save().then((response) => {
-                           
+
                             resolve({ status: true })
                         })
                     }
                 })
             })
         } catch (error) {
-            console.log(error.message);
+            res.render("users/catchError", { message: error.message })
         }
     },
 
-      /* GET Coupon List Page. */
-      getCouponList:()=>{
+    /* GET Coupon List Page. */
+    getCouponList: () => {
         try {
-            return new Promise((resolve,reject)=>{
-                couponModel.Coupon.find().then((coupons)=>{
-                   
+            return new Promise((resolve, reject) => {
+                couponModel.Coupon.find().then((coupons) => {
+
                     resolve(coupons)
                 })
             })
         } catch (error) {
-            console.log(error.message);
+            res.render("users/catchError", { message: error.message });
         }
     },
 
-    
+
     /* DELETE Coupon  Page. */
     removeCoupon: (couponId) => {
         try {
@@ -70,12 +70,12 @@ module.exports={
                 })
             })
         } catch (error) {
-            console.log(error.message);
+            res.render("users/catchError", { message: error.message })
         }
     },
 
-     // to verify the coupon code
-     verifyCoupon: (userId, couponCode) => {
+    // to verify the coupon code
+    verifyCoupon: (userId, couponCode) => {
         try {
             return new Promise((resolve, reject) => {
                 couponModel.Coupon.find({ couponCode: couponCode }).then(async (couponExist) => {
@@ -102,28 +102,28 @@ module.exports={
                 })
             })
         } catch (error) {
-            console.log(error.message);
+            res.render("users/catchError", { message: error.message })
         }
     },
 
 
-      // to apply coupon and minus the total amount from it 
-      applyCoupon: (couponCode, total) => {
-       
-       
+    // to apply coupon and minus the total amount from it 
+    applyCoupon: (couponCode, total) => {
+
+
         try {
             return new Promise((resolve, reject) => {
                 couponModel.Coupon.findOne({ couponCode: couponCode }).then((couponExist) => {
-                    
+
                     if (couponExist) {
-                        
+
                         if (new Date(couponExist.validity) - new Date() > 0) {
-                            
+
                             if (total >= couponExist.minAmount) {
-                                
+
                                 let discountAmount = (total * couponExist.minDiscountPercentage) / 100
                                 if (discountAmount > couponExist.maxDiscountValue) {
-                                   
+
                                     discountAmount = couponExist.maxDiscountValue
                                     resolve({
                                         status: true,
@@ -132,7 +132,7 @@ module.exports={
                                         couponCode: couponCode
                                     })
                                 } else {
-                                   
+
                                     resolve({
                                         status: true,
                                         discountAmount: discountAmount,
@@ -141,21 +141,21 @@ module.exports={
                                     })
                                 }
                             } else {
-                               
+
                                 resolve({
                                     status: false,
                                     message: `Minimum purchase amount is ${couponExist.minAmount}`
                                 })
                             }
                         } else {
-                          
+
                             resolve({
                                 status: false,
                                 message: "Counpon expired"
                             })
                         }
                     } else {
-                       
+
                         resolve({
                             status: fasle,
                             message: "Counpon doesnt Exist"
@@ -165,16 +165,16 @@ module.exports={
 
             })
         } catch (error) {
-            console.log(error.message);
+            res.render("users/catchError", { message: error.message })
         }
     },
 
-    
+
     //to save coupon code on user collection
     addCouponToUser: (couponCode, userId) => {
         try {
             return new Promise((resolve, reject) => {
-                
+
                 userModel.user.updateOne(
                     { _id: userId },
                     {
@@ -186,21 +186,19 @@ module.exports={
                     })
             })
         } catch (error) {
-            console.log(error.message);
+            res.render("users/catchError", { message: error.message })
         }
     },
 
-    getCouponList:()=>
-    {
+    getCouponList: () => {
         try {
             return new Promise((resolve, reject) => {
-                couponModel.Coupon.find().then((coupon)=>
-              {
-                resolve(coupon)
-              })  
+                couponModel.Coupon.find().then((coupon) => {
+                    resolve(coupon)
+                })
             })
         } catch (error) {
-          console.log(error.mesage);  
+            res.render("users/catchError", { message: error.message })
         }
     },
 

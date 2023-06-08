@@ -70,24 +70,27 @@
               <div class="card-body">
                 
                 <div class="row">
+                  <% product.forEach((product)=>{%>
                   <div class="col-md-2">
-                    <img src="/uploads/<%=lastorder.productDetails[0]?.image[0]%>" class="img-fluid" alt="Phone">
+                    <img src="/uploads/<%=product?.image[0]%>" class="img-fluid" alt="Phone">
                   </div>
                   <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                    <p class="text-muted mb-0"><%=lastorder.productDetails[0]?.productName%></p>
+                    <p class="text-muted mb-0"><%=product?.productName%></p>
                   </div>
                   <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                    <p class="text-muted mb-0 small">Brand: <%=lastorder.productDetails[0]?.brand%></p>
+                    <p class="text-muted mb-0 small">Brand: <%=product?.brand%></p>
                   </div>
                   <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                    <p class="text-muted mb-0 small">Category: <%=lastorder.productDetails[0]?.category%></p>
+                    <p class="text-muted mb-0 small">Category: <%=product?.category%></p>
                   </div>
                   <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                    <p class="text-muted mb-0 small">Qty:<%=lastorder.productDetails[0]?.quantity%></p>
+                    <p class="text-muted mb-0 small">Qty:<%=product?.quantity%></p>
                   </div>
                   <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                    <p class="text-muted mb-0 small">₹<%=lastorder.productDetails[0]?.productPrice%></p>
+                    <p class="text-muted mb-0 small">₹<%=product?.productPrice%></p>
                   </div>
+                  
+                  <% })%>
                 </div>
                 
                 <hr class="mb-4" style="background-color: #e0e0e0; opacity: 1;">

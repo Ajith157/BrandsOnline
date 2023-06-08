@@ -22,9 +22,7 @@
                   <li class="nav-item">
                     <a class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false"><i class="fi-rs-shopping-bag mr-10"></i>Orders</a>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link" id="track-orders-tab" data-bs-toggle="tab" href="#track-orders" role="tab" aria-controls="track-orders" aria-selected="false"><i class="fi-rs-shopping-cart-check mr-10"></i>Track Your Order</a>
-                  </li>
+                 
                   <li class="nav-item">
                     <a class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="true"><i class="fi-rs-marker mr-10"></i>My Address</a>
                   </li>
@@ -42,7 +40,7 @@
                 <div class="tab-pane fade active show" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
                   <div class="card">
                     <div class="card-header">
-                      <h5 class="mb-0">Welcome <%=user.name%>!</h5>
+                      <h5 class="mb-0">Welcome <%=userData.username%>!</h5>
                     </div>
                     <div class="card-body">
                       <form>
@@ -51,22 +49,22 @@
                             <div class="row gx-3">
                               <div class="col-6  mb-3">
                                 <label class="form-label">User Name</label>
-                                <input class="form-control" id="userName" value="<%=user.name%>" type="text" placeholder="Type here">
+                                <input class="form-control" id="userName" value="<%=userData.username%>" type="text" placeholder="Type here">
                                 <p id="error1" class="text-danger"></p>
                               </div> <!-- col .// -->
                               <div class="col-lg-6  mb-3">
                                 <label class="form-label">Email</label>
-                                <input class="form-control" id="email" value="<%=user.email%>" type="email" placeholder="example@mail.com">
+                                <input class="form-control" id="email" value="<%=userData.email%>" type="email" placeholder="example@mail.com">
                                 <p id="error2" class="text-danger"></p>
                               </div> <!-- col .// -->
                               <div class="col-lg-6  mb-3">
                                 <label class="form-label">Phone</label>
-                                <input class="form-control" id="mobile" value="<%=user.mobile%>" type="tel" placeholder="Type here">
+                                <input class="form-control" id="mobile" value="<%=userData.phonenumber%>" type="tel" placeholder="Type here">
                                 <p id="error3" class="text-danger"></p>
                               </div> <!-- col .// -->
                               <div class="col-6  mb-3">
                                 <label class="form-label">Wallet Balance</label>
-                                <input class="form-control" disabled value="<%=user.wallet%>" type="number">
+                                <input class="form-control" disabled value="<%=userData.wallet%>" type="number">
                               </div> <!-- col .// -->
                               <!-- <div class="col-lg-12  mb-3">
                                 <label class="form-label">Address</label>
@@ -81,7 +79,7 @@
 
                         </div> <!-- row.// -->
                         <br>
-                        <button class="btn btn-primary" type="button" onclick="changeUserData('<%=user._id%>')">Save changes</button>
+                        <!-- <button class="btn btn-primary" type="button" onclick="changeUserData('<%=user._id%>')">Save changes</button> -->
                       </form>
                     </div>
                   </div>
@@ -129,31 +127,7 @@
 
 
                 </div>
-                <div class="tab-pane fade" id="track-orders" role="tabpanel" aria-labelledby="track-orders-tab">
-                  <div class="card">
-                    <div class="card-header">
-                      <h5 class="mb-0">Orders tracking</h5>
-                    </div>
-                    <div class="card-body contact-from-area">
-                      <p>To track your order please enter your OrderID in the box below and press "Track" button. This was given to you on your receipt and in the confirmation email you should have received.</p>
-                      <div class="row">
-                        <div class="col-lg-8">
-                          <form class="contact-form-style mt-30 mb-50" action="#" method="post">
-                            <div class="input-style mb-20">
-                              <label>Order ID</label>
-                              <input name="order-id" placeholder="Found in your order confirmation email" type="text" class="square">
-                            </div>
-                            <div class="input-style mb-20">
-                              <label>Billing email</label>
-                              <input name="billing-email" placeholder="Email you used during checkout" type="email" class="square">
-                            </div>
-                            <button class="submit submit-auto-width" type="submit">Track</button>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+          
                 <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
                   <div class="row">
                     <% address?.Address.forEach(function(item) { %>
@@ -179,19 +153,7 @@
                       </div>
                     </div>
                     <% }); %>
-                    <!-- <div class="col-lg-6">
-                      <div class="card">
-                        <div class="card-header">
-                          <h5 class="mb-0">Shipping Address</h5>
-                        </div>
-                        <div class="card-body">
-                          <address>4299 Express Lane<br>
-                            Sarasota, <br>FL 34249 USA <br>Phone: 1.941.227.4444</address>
-                          <p>Sarasota</p>
-                          <a href="#" class="btn-small">Edit</a>
-                        </div>
-                      </div>
-                    </div> -->
+                    
                   </div>
                 </div>
                 <div class="tab-pane fade" id="account-detail" role="tabpanel" aria-labelledby="account-detail-tab">
@@ -256,29 +218,7 @@
   </section>
 </main>
 
-<!-- modal for viewing the products
-<div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg " role="document">
-    <div class="modal-content ">
-      <div class="modal-header ">
-        <h5 class="modal-title" id="exampleModalLabel">Product Details</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body ">
-        <div class="row">
 
-          <div class="col-md-6">
-            <img src="" alt="">
-            <h6></h6>
-            <p></p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
 
 
 
@@ -457,6 +397,7 @@
 
   // logout
   $('#logout').on('click', function(event) {
+    console.log('lololololo');
     event.preventDefault();
     swal({
       title: 'Are you sure you want to log out?',
@@ -467,14 +408,14 @@
       confirmButtonText: 'Yes, log me out!',
       timer: 3000
     }).then((result) => {
-      if (result.isConfirmed) {
+      if (result) {
         $.ajax({
           url: '/logout',
           method: 'GET'
         });
         swal({
           title: 'Logout Successful!!',
-          text: "You are not logged in!",
+          
           icon: 'success',
           timer: 5000
         }).then((result) => {

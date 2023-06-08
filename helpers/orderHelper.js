@@ -1,11 +1,11 @@
-const express=require('express')
+const express = require('express')
 const { ObjectId } = require('mongodb');
-const cartModel=require('../model/schema')
-const orderModel=require('../model/schema')
-const addressModel=require('../model/schema')
-const productModel=require('../model/schema')
+const cartModel = require('../model/schema')
+const orderModel = require('../model/schema')
+const addressModel = require('../model/schema')
+const productModel = require('../model/schema')
 const userModel = require('../model/schema')
-const Razorpay=require('razorpay')
+const Razorpay = require('razorpay')
 
 const keyId = process.env.key_id
 const keySecret = process.env.key_secret
@@ -16,19 +16,19 @@ var instance = new Razorpay({
 });
 
 
-module.exports={
+module.exports = {
 
     //  TO GET THE TOTAL AMOUNT IN THE CART
-      totalCheckOutAmount: (userId) => {
-        console.log(userId,'tytytttytttytytttyt');
-      
+    totalCheckOutAmount: (userId) => {
+
+
         try {
             return new Promise((resolve, reject) => {
                 cartModel.Cart.aggregate([
                     {
                         $match: {
                             user: new ObjectId(userId)
-                            
+
                         }
                     },
                     {
@@ -63,18 +63,18 @@ module.exports={
                     }
                 ])
                     .then((total) => {
-                        console.log(total,'klklklklklklkl');
-                        
+
+
                         resolve(total[0]?.total)
                     })
             })
         } catch (error) {
-            console.log(error.message);
+            res.render("users/catchError", { message: error.message })
         }
     },
 
     // TO GET THE SUBTOTAL 
-     getSubTotal: (userId) => {
+    getSubTotal: (userId) => {
         try {
             return new Promise((resolve, reject) => {
                 cartModel.Cart.aggregate([
@@ -98,8 +98,8 @@ module.exports={
                             localField: "item",
                             foreignField: "_id",
                             as: "carted"
-                        }    
-                    },     
+                        }
+                    },
                     {
                         $project: {
                             item: 1,
@@ -124,28 +124,24 @@ module.exports={
                     })
             })
         } catch (error) {
-            console.log(error.message);
+            res.render("users/catchError", { message: error.message })
         }
     },
-   
-     // get address page
-     getAddress:(userId)=>
-     {
-         
-         return new Promise((resolve, reject) => {
-             addressModel.Address.findOne({user :userId}).then((response)=>
-             {
-             
-                 resolve(response)
-             })
-         })
-     },
 
-//    POST ADD ADDRESS
-    postAddress:(data,userId)=>
-   
-    {
-       
+    // get address page
+    getAddress: (userId) => {
+
+        return new Promise((resolve, reject) => {
+            addressModel.Address.findOne({ user: userId }).then((response) => {
+
+                resolve(response)
+            })
+        })
+    },
+
+    //    POST ADD ADDRESS
+    postAddress: (data, userId) => {
+
         try {
             return new Promise((resolve, reject) => {
                 let addressInfo = {
@@ -159,56 +155,52 @@ module.exports={
                     phone: data.phone,
                     email: data.email
                 }
-                addressModel.Address.findOne({user : userId}).then(async(ifAddress)=>
-                {
-                if(ifAddress)
-                {
-                    addressModel.Address.updateOne(
-                        {user : userId},
-                        {
-                            $push:{Address : addressInfo}
-                        }
-                    ).then((response)=>
-                    {
-                        resolve(response)
-                    })
-                }
-                else{
-                    let newAddress = addressModel.Address({user : userId,Address : addressInfo})
-                    await newAddress.save().then((response)=>
-                    {
-                        resolve (response)
-                    })
-                }
+                addressModel.Address.findOne({ user: userId }).then(async (ifAddress) => {
+                    if (ifAddress) {
+                        addressModel.Address.updateOne(
+                            { user: userId },
+                            {
+                                $push: { Address: addressInfo }
+                            }
+                        ).then((response) => {
+                            resolve(response)
+                        })
+                    }
+                    else {
+                        let newAddress = addressModel.Address({ user: userId, Address: addressInfo })
+                        await newAddress.save().then((response) => {
+                            resolve(response)
+                        })
+                    }
+                })
             })
-        })
         } catch (error) {
 
-            console.log(error.message);
-            
+            res.render("users/catchError", { message: error.message })
+
         }
     },
     // GET ORDER
     getOrders: (userId) => {
-        console.log(userId,'555555555555555555555');
-        
+
+
         try {
             return new Promise((resolve, reject) => {
-                orderModel.Order.findOne({ user: new ObjectId (userId)}).then((user) => {
-                   
+                orderModel.Order.findOne({ user: new ObjectId(userId) }).then((user) => {
+
                     resolve(user)
                 })
             })
         } catch (error) {
-            console.log(error.message);
+            res.render("users/catchError", { message: error.message })
         }
     },
-     
+
 
     // PLACE ORDER
     placeOrder: (data) => {
-        console.log(data,'%%%%%%%%%%%5');
-        console.log(data.discountedAmount,'*********************');
+
+
         try {
             let flag = 0
             return new Promise(async (resolve, reject) => {
@@ -237,11 +229,11 @@ module.exports={
                     },
                     {
                         $unwind: "$productDetails"
-    
+
                     },
                     {
                         $project: {
-    
+
                             productId: "$productDetails._id",
                             productName: "$productDetails.name",
                             productPrice: "$productDetails.price",
@@ -252,7 +244,7 @@ module.exports={
                         }
                     }
                 ])
-    
+
                 let Address = await addressModel.Address.aggregate([
                     {
                         $match: { user: new ObjectId(data.user) }
@@ -267,34 +259,34 @@ module.exports={
                         $project: { item: "$Address" }
                     }
                 ])
-    
+
                 let status, orderStatus;
                 if (data.payment_option === "COD") {
                     status = "Placed",
                         orderStatus = "Success"
-    
+
                 } else if (data.payment_option === 'wallet') {
-                    console.log('1');
-                
+
+
                     let userData = await userModel.user.findById({ _id: data.user })
                     if (userData.wallet < data.discountedAmount) {
-                        
+
                         flag = 1
                         reject(new Error("Insufficient wallet balance!"))
-    
+
                     } else {
                         userData.wallet -= data.discountedAmount
-    
+
                         await userData.save()
                         status = 'Placed',
                             orderStatus = 'Success'
                     }
-    
+
                 } else {
                     status = "Pending",
                         orderStatus = "Pending"
                 }
-    
+
                 let orderData = {
                     name: Address[0].item.fname,
                     paymentStatus: status,
@@ -305,8 +297,8 @@ module.exports={
                     totalPrice: data.discountedAmount
                 }
                 let order = await orderModel.Order.findOne({ user: data.user })
-    
-    
+
+
                 if (flag == 0) {
                     if (order) {
                         await orderModel.Order.updateOne(
@@ -326,7 +318,7 @@ module.exports={
                             resolve(response)
                         })
                     }
-    
+
                     //inventory management 
                     // update product quantity in the database
                     for (let i = 0; i < productDetails.length; i++) {
@@ -338,23 +330,23 @@ module.exports={
                         await cartModel.Cart.deleteMany({ user: data.user }).then(() => {
                             resolve()
                         })
-    
+
                     }
-    
+
                 }
-    
+
             })
         } catch (error) {
-            throw error;
+            res.render("users/catchError", { message: error.message })
         }
     },
 
-   
+
     // RAZORPAY GENERATION
     generateRazorpay(userId, total) {
         try {
             return new Promise(async (resolve, reject) => {
-               
+
                 let orders = await orderModel.Order.find({ user: userId })
 
                 let order = orders[0].orders.slice().reverse();
@@ -375,38 +367,40 @@ module.exports={
 
             })
         } catch (error) {
-            console.log(error.message);
+            res.render("users/catchError", { message: error.message })
         }
     },
-    
+
     // VERIFY PAYMENT
 
 
     verifyPayment: (details) => {
         return new Promise((resolve, reject) => {
-          const crypto = require("crypto");
-          let hmac = crypto.createHmac("sha256", "aYOXpKbOXtjO5Yo2ggpZDwsw");
-    
-          hmac.update(
-            details["payment[razorpay_order_id]"] +
-              "|" +
-              details["payment[razorpay_payment_id]"]
-          );
-          hmac = hmac.digest("hex");
-          console.log('rtrtrtrtrtrtrrttrtrtrrtr');
-          if (hmac == details["payment[razorpay_signature]"]) {
-            resolve();
-          } else {
-            reject();
-          }
+            const crypto = require("crypto");
+            let hmac = crypto.createHmac("sha256", "aYOXpKbOXtjO5Yo2ggpZDwsw");
+
+            hmac.update(
+                details["payment[razorpay_order_id]"] +
+                "|" +
+                details["payment[razorpay_payment_id]"]
+            );
+            hmac = hmac.digest("hex");
+
+            if (hmac == details["payment[razorpay_signature]"]) {
+                resolve();
+            } else {
+                reject();
+            }
         });
-      },
-   
+    },
+
+
+
 
     //   find order
 
     findOrder: (orderId, userId) => {
-      
+
         try {
             return new Promise((resolve, reject) => {
                 orderModel.Order.aggregate([
@@ -431,7 +425,7 @@ module.exports={
                 })
             })
         } catch (error) {
-            console.log(error.message);
+            res.render("users/catchError", { message: error.message })
         }
     },
 
@@ -464,10 +458,10 @@ module.exports={
                 })
             })
         } catch (error) {
-            console.log(error.message);
+            res.render("users/catchError", { message: error.message })
         }
     },
-    
+
 
     findAddress: (orderId, userId) => {
         try {
@@ -503,13 +497,13 @@ module.exports={
                         }
                     }
                 ]).then((response) => {
-                    console.log(response,"3456789000000000000000000");
-                    // console.log(response[0].phone,'[[');
+
+
                     resolve(response)
                 })
             })
         } catch (error) {
-            console.log(error.message);
+            res.render("users/catchError", { message: error.message })
         }
     },
 
@@ -517,13 +511,13 @@ module.exports={
     cancelOrder: (orderId) => {
         try {
             return new Promise((resolve, reject) => {
-                orderModel.Order.find({ 'orders._id': orderId }).then((orders) => {
+                orderModel.Order.find({ 'orders._id': orderId.toString() }).then((orders) => {
 
                     let orderIndex = orders[0].orders.findIndex(
-                        (orders) => orders._id == orderId
+                        (orders) => orders._id.toString() == orderId.toString()
                     );
 
-                    let order = orders[0].orders.find((order) => order._id == orderId);
+                    let order = orders[0].orders.find((order) => order._id.toString() == orderId.toString());
 
                     if (order.paymentMethod === 'razorpay' && order.paymentStatus === 'paid') {
 
@@ -537,7 +531,7 @@ module.exports={
                                 }
                             }
                         ).then((orders) => {
-                            console.log(orders, '000');
+
                             resolve(orders)
                         })
                     } else if (order.paymentMethod === 'COD' && order.orderConfirm === 'Delivered' && order.paymentStatus === 'paid') {
@@ -550,7 +544,7 @@ module.exports={
                                 }
                             }
                         ).then((orders) => {
-                            console.log(orders, '111');
+
                             resolve(orders)
                         })
                     } else {
@@ -563,7 +557,7 @@ module.exports={
                                 }
                             }
                         ).then((orders) => {
-                            console.log(orders, '222');
+
                             resolve(orders)
                         })
                     }
@@ -572,73 +566,76 @@ module.exports={
 
             })
         } catch (error) {
-            console.log(error.message);
+            res.render("users/catchError", { message: error.message })
         }
     },
 
-     // return order
-   // return order
-   returnOrder: (orderId) => {
-    try {
-        return new Promise((resolve, reject) => {
-            orderModel.Order.find({ 'orders._id': orderId }).then((orders) => {
+    // return order
+    // return order
+    returnOrder: (orderId) => {
+        try {
+            return new Promise((resolve, reject) => {
+                orderModel.Order.find({ 'orders._id': orderId }).then((orders) => {
 
-                let orderIndex = orders[0].orders.findIndex(
-                    (orders) => orders._id == orderId
-                );
-                let order = orders[0].orders.find((order) => order._id == orderId);
+                    let orderIndex = orders[0].orders.findIndex(
+                        (orders) => orders._id == orderId
+                    );
+                    let order = orders[0].orders.find((order) => order._id == orderId);
 
-                // if (order.paymentMethod === 'razorpay' && order.paymentStatus === 'Paid') {
+                    // if (order.paymentMethod === 'razorpay' && order.paymentStatus === 'Paid') {
                     // Fetch payment details from Razorpay API
-                  if (order.paymentMethod === 'COD' || order.paymentMethod === 'razorpay') {
-                    // Update order status in the database
-                    orderModel.Order.updateOne(
-                        { 'orders._id': orderId },
-                        {
-                            $set: {
-                                ['orders.' + orderIndex + '.orderConfirm']: 'Returned',
-                                ['orders.' + orderIndex + '.paymentStatus']: 'Refunded'
+                    if (order.paymentMethod === 'COD' || order.paymentMethod === 'razorpay') {
+                        // Update order status in the database
+                        orderModel.Order.updateOne(
+                            { 'orders._id': orderId },
+                            {
+                                $set: {
+                                    ['orders.' + orderIndex + '.orderConfirm']: 'Returned',
+                                    ['orders.' + orderIndex + '.paymentStatus']: 'Refunded'
+                                }
                             }
-                        }
-                    ).then((orders) => {
-                        resolve(orders);
-                    });
-                } else {
-                    console.log('Invalid payment method');
-                    reject('Invalid payment method');
-                }
-            });
-        });
-    } catch (error) {
-        console.log(error.message);
-    }
-},
-
- // change payment status
- changePaymentStatus: (userId, orderId) => {
-    try {
-        console.log("testinggggggg");
-        return new Promise(async (resolve, reject) => {
-            await orderModel.Order.updateOne(
-                { "orders._id": orderId },
-                {
-                    $set: {
-                        "orders.$.orderConfirm": "Success",
-                        "orders.$.paymentStatus": "Paid"
-  
+                        ).then((orders) => {
+                            resolve(orders);
+                        });
+                    } else {
+                        console.log('Invalid payment method');
+                        reject('Invalid payment method');
                     }
-                }
-            ),
-                cartModel.Cart.deleteMany({ user: userId }).then(() => {
-                    resolve()
-                })
-        })
-    } catch (error) {
-        console.log(error.message);
-    }
-  },
+                });
+            });
+        } catch (error) {
+            res.render("users/catchError", { message: error.message })
+        }
+    },
 
-    
+
+
+
+    // change payment status
+    changePaymentStatus: (userId, orderId) => {
+        try {
+
+            return new Promise(async (resolve, reject) => {
+                await orderModel.Order.updateOne(
+                    { "orders._id": orderId },
+                    {
+                        $set: {
+                            "orders.$.orderConfirm": "Success",
+                            "orders.$.paymentStatus": "Paid"
+
+                        }
+                    }
+                ),
+                    cartModel.Cart.deleteMany({ user: userId }).then(() => {
+                        resolve()
+                    })
+            })
+        } catch (error) {
+            res.render("users/catchError", { message: error.message })
+        }
+    },
+
+
 
     //to get the order address of the user
     getOrderAddress: (userId, orderId) => {
@@ -673,9 +670,9 @@ module.exports={
     },
 
 
-     /* GET Edit Address Page */
-     getEditAddress: (addressId, userId) => {
-        console.log(addressId, userId,'aaaaaaaaaaaaa');
+    /* GET Edit Address Page */
+    getEditAddress: (addressId, userId) => {
+
         return new Promise((resolve, reject) => {
             addressModel.Address.aggregate([
                 {
@@ -708,7 +705,7 @@ module.exports={
         });
     },
 
-//    PATCH EDIT ADDRESS
+    //    PATCH EDIT ADDRESS
     patchEditAddress: (userId, addressId, UserData) => {
         return new Promise(async (resolve, reject) => {
             try {
@@ -728,25 +725,25 @@ module.exports={
                         resolve(response);
                     });
             } catch (error) {
-                reject(error);
+                res.render("users/catchError", { message: error.message })
             }
         });
     },
 
-    deleteAddress:(userId,addressId)=>{
-        return new Promise((resolve,reject)=>{
+    deleteAddress: (userId, addressId) => {
+        return new Promise((resolve, reject) => {
             addressModel.Address.updateOne(
                 { user: new ObjectId(userId) },
                 { $pull: { Address: { _id: new ObjectId(addressId) } } }
-              ).then((response)=>{
+            ).then((response) => {
                 resolve(response)
             })
         })
 
     },
 
-     //to get the current order
-     getSubOrders: (orderId, userId) => {
+    //to get the current order
+    getSubOrders: (orderId, userId) => {
         try {
             return new Promise((resolve, reject) => {
                 orderModel.Order.aggregate([
@@ -770,11 +767,11 @@ module.exports={
                 })
             })
         } catch (error) {
-            console.log(error.message);
+            res.render("users/catchError", { message: error.message })
         }
     },
 
-    
+
     //to get the ordered products of the user
     getOrderedProducts: (orderId, userId) => {
         try {
@@ -806,11 +803,11 @@ module.exports={
                 })
             })
         } catch (error) {
-            console.log(error.message);
+            res.render("users/catchError", { message: error.message })
         }
     },
 
-    
+
     // to get the total of a certain product by multiplying with the quantity
     getTotal: (orderId, userId) => {
         try {
@@ -844,231 +841,227 @@ module.exports={
                 })
             })
         } catch (error) {
-            console.log(error.message);
+            res.render("users/catchError", { message: error.message })
         }
     },
 
-        //to find the total of the order
-        getOrderTotal: (orderId, userId) => {
-            try {
-                return new Promise((resolve, reject) => {
-                    orderModel.Order.aggregate([
-                        {
-                            $match: {
-                                "user": new ObjectId(userId)
-                            }
-                        },
-                        {
-                            $unwind: "$orders"
-                        },
-                        {
-                            $match: {
-                                "orders._id": new ObjectId(orderId)
-                            }
-                        },
-                        {
-                            $unwind: "$orders.productDetails"
-                        },
-                        {
-                            $group: {
-                                _id: "$orders._id",
-                                totalPrice: { $sum: "$orders.productDetails.productPrice" }
-                            }
+    //to find the total of the order
+    getOrderTotal: (orderId, userId) => {
+        try {
+            return new Promise((resolve, reject) => {
+                orderModel.Order.aggregate([
+                    {
+                        $match: {
+                            "user": new ObjectId(userId)
                         }
-    
-                    ]).then((response) => {
-                        if (response && response.length > 0) {
-                            const orderTotal = response[0].totalPrice
-                            resolve(orderTotal)
+                    },
+                    {
+                        $unwind: "$orders"
+                    },
+                    {
+                        $match: {
+                            "orders._id": new ObjectId(orderId)
                         }
-                    })
+                    },
+                    {
+                        $unwind: "$orders.productDetails"
+                    },
+                    {
+                        $group: {
+                            _id: "$orders._id",
+                            totalPrice: { $sum: "$orders.productDetails.productPrice" }
+                        }
+                    }
+
+                ]).then((response) => {
+                    if (response && response.length > 0) {
+                        const orderTotal = response[0].totalPrice
+                        resolve(orderTotal)
+                    }
                 })
-            } catch (error) {
-                console.log(error.message);
-            }
-        },
+            })
+        } catch (error) {
+            res.render("users/catchError", { message: error.message })
+        }
+    },
 
-             // get order by date
+    // get order by date
 
-             getOrderByDate: () => {
-                return new Promise(async (resolve, reject) => {
-                  const startDate = new Date();
-                  startDate.setHours(0, 0, 0, 0); // Set time to the beginning of the current day
-                  console.log(startDate, 'Start date');
-                  await orderModel.Order
-                    .find({ createdAt: { $gte: startDate } })
-                    .then((response) => {
-                      console.log(response, 'Response');
-                      resolve(response);
-                    })
-                    .catch((error) => {
-                      reject(error);
-                    });
+    getOrderByDate: () => {
+        return new Promise(async (resolve, reject) => {
+            const startDate = new Date();
+            startDate.setHours(0, 0, 0, 0); // Set time to the beginning of the current day
+            console.log(startDate, 'Start date');
+            await orderModel.Order
+                .find({ createdAt: { $gte: startDate } })
+                .then((response) => {
+
+                    resolve(response);
+                })
+                .catch((error) => {
+                    reject(error);
                 });
-              },
-              
-
-  getOrderByCategory:()=>
-  {
-    return new Promise(async (resolve, reject) => {
-      await orderModel.Order.aggregate([
-        { $unwind: "$orders"},
-      ]).then((response)=>
-      {
-        const productDetails = response.map(order => order.orders.productDetails);
-        resolve(productDetails)
-
-      })
-    })
-  },
+        });
+    },
 
 
-   //to change the order status by admin
- changeOrderStatus: (orderId, status) => {
-    try {
-        return new Promise((resolve, reject) => {
-            orderModel.Order.updateOne(
-                { 'orders._id': orderId },
-                {
-                    $set: { 'orders.$.orderConfirm': status }
-                }).then((response) => {
-                    
-                    resolve(response)
-                })
+    getOrderByCategory: () => {
+        return new Promise(async (resolve, reject) => {
+            await orderModel.Order.aggregate([
+                { $unwind: "$orders" },
+            ]).then((response) => {
+                const productDetails = response.map(order => order.orders.productDetails);
+                resolve(productDetails)
+
+            })
         })
-    } catch (error) {
-        console.log(error.message);
-    }
-  },
+    },
+
+
+    //to change the order status by admin
+    changeOrderStatus: (orderId, status) => {
+        try {
+            return new Promise((resolve, reject) => {
+                orderModel.Order.updateOne(
+                    { 'orders._id': orderId },
+                    {
+                        $set: { 'orders.$.orderConfirm': status }
+                    }).then((response) => {
+
+                        resolve(response)
+                    })
+            })
+        } catch (error) {
+            res.render("users/catchError", { message: error.message })
+        }
+    },
 
 
     updatePaymentStatus: (orderId, userId) => {
-    try {
-        return new Promise((resolve, reject) => {
-            cartModel.Order.aggregate([
-                {
-                    $match: {
-                        'user': new ObjectId(userId)
+        try {
+            return new Promise((resolve, reject) => {
+                cartModel.Order.aggregate([
+                    {
+                        $match: {
+                            'user': new ObjectId(userId)
+                        }
+                    },
+                    {
+                        $unwind: '$orders'
+                    },
+                    {
+                        $match: {
+                            'orders._id': new ObjectId(orderId)
+                        }
+                    },
+                    {
+                        $set: {
+                            'orders.paymentStatus': 'refunded'
+                        }
                     }
-                },
-                {
-                    $unwind: '$orders'
-                },
-                {
-                    $match: {
-                        'orders._id': new ObjectId(orderId)
-                    }
-                },
-                {
-                    $set: {
-                        'orders.paymentStatus': 'refunded'
-                    }
-                }
-            ]).then((response) => {
-              
-                resolve(response)
-            })
-        })
-    } catch (error) {
-        console.log(error.message);
-    }
-},
-getAllOrder:()=>
-{
-  try {
-    return new Promise(async (resolve, reject) => {
-     let Order = await orderModel.Order.aggregate([{$unwind:"$orders"},{$sort:{_id:-1}}]).then((response)=>
-  {
-    resolve(response)
-  })
-    })
-  } catch (error) {
-    console.log(error.message);
-  }
-},
-    
+                ]).then((response) => {
 
-// wallet
-addWallet: (userId, total) => {
-    console.log(userId,total,'');
-    try {
-        return new Promise((resolve, reject) => {
-            console.log(userId, total, '////////////////');
-            cartModel.user.updateOne({ _id: userId },
-                {
-                    $inc: { wallet: total }
-                }).then((response) => {
                     resolve(response)
                 })
-        })
-    } catch (error) {
-        console.log(error.message);
-    }
-  },
+            })
+        } catch (error) {
+            res.render("users/catchError", { message: error.message })
+        }
+    },
+    getAllOrder: () => {
+        try {
+            return new Promise(async (resolve, reject) => {
+                let Order = await orderModel.Order.aggregate([{ $unwind: "$orders" }, { $sort: { _id: -1 } }]).then((response) => {
+                    resolve(response)
+                })
+            })
+        } catch (error) {
+            res.render("users/catchError", { message: error.message })
+        }
+    },
 
-  createData: (orders,product,address) => {
-    console.log(orders,product,'rrrrrrrrrrrrrrrrrr');
 
-    // let address = details.shippingAddress;
-    // let product = details.productsDetails;
-    console.log(product);
-    var data = {
-      // Customize enables you to provide your own templates
-      // Please review the documentation for instructions and examples
-      customize: {
-        //  "template": fs.readFileSync('template.html', 'base64') // Must be base64 encoded html
-      },
-      images: {
-        // The logo on top of your invoice
-        logo: "",
-        // The invoice background
-        background: "https://public.easyinvoice.cloud/img/watermark-draft.jpg",
-      },
-      // Your own data
-      sender: {
-        company: "BrandsOnline",
-        address: "UB city",
-        zip: "996585",
-        city: "Bangalore",
-        country: "India",
-      },
-      // Your recipient
-      client: {
-        // company: address[0].item.fname,
-        // address: address[0].item.street,
-        // zip: address[0].item.pincode,
-        // city: address[0].item.city,
-        country: "India" ,   
-        
-      },
+    // wallet
+    addWallet: (userId, total) => {
 
-      information: {
-        // number: address[0].item.mobile,
-        date: "12-12-2021",
-        "due-date": "31-12-2021",
-      },
+        try {
+            return new Promise((resolve, reject) => {
 
-      products: [
-        {
-          quantity: product[0][0].quantity,
-          description: product[0][0].productName,
-          "tax-rate": 6,
-          price: product[0][0].productPrice,
-        },
-      ],
-      // The message you would like to display on the bottom of your invoice
-      "bottom-notice": "Thank you for your order ",
-      // Settings to customize your invoice
-      settings: {
-        currency: "INR", // See documentation 'Locales and Currency' for more info. Leave empty for no currency.
-      },
-      // Translate your invoice to your preferred language
-      translate: {},
-    };
-console.log(data,"55555555555555555555");
-    return data;
-  },
+                cartModel.user.updateOne({ _id: userId },
+                    {
+                        $inc: { wallet: total }
+                    }).then((response) => {
+                        resolve(response)
+                    })
+            })
+        } catch (error) {
+            res.render("users/catchError", { message: error.message })
+        }
+    },
 
-    
-   
+    createData: (orders, product, address) => {
+
+
+        // let address = details.shippingAddress;
+        // let product = details.productsDetails;
+        console.log(product);
+        var data = {
+            // Customize enables you to provide your own templates
+            // Please review the documentation for instructions and examples
+            customize: {
+                //  "template": fs.readFileSync('template.html', 'base64') // Must be base64 encoded html
+            },
+            images: {
+                // The logo on top of your invoice
+                logo: "",
+                // The invoice background
+                background: "https://public.easyinvoice.cloud/img/watermark-draft.jpg",
+            },
+            // Your own data
+            sender: {
+                company: "BrandsOnline",
+                address: "UB city",
+                zip: "996585",
+                city: "Bangalore",
+                country: "India",
+            },
+            // Your recipient
+            client: {
+                // company: address[0].item.fname,
+                // address: address[0].item.street,
+                // zip: address[0].item.pincode,
+                // city: address[0].item.city,
+                country: "India",
+
+            },
+
+            information: {
+                // number: address[0].item.mobile,
+                date: "12-12-2021",
+                "due-date": "31-12-2021",
+            },
+
+            products: [
+                {
+                    quantity: product[0][0].quantity,
+                    description: product[0][0].productName,
+                    "tax-rate": 6,
+                    price: product[0][0].productPrice,
+                },
+            ],
+            // The message you would like to display on the bottom of your invoice
+            "bottom-notice": "Thank you for your order ",
+            // Settings to customize your invoice
+            settings: {
+                currency: "INR", // See documentation 'Locales and Currency' for more info. Leave empty for no currency.
+            },
+            // Translate your invoice to your preferred language
+            translate: {},
+        };
+
+        return data;
+    },
+
+
+
 }

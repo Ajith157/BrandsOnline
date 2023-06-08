@@ -51,7 +51,8 @@
               <h1>My Cart</h1>
               <p>Your cart is currently empty.</p>
               <p>Start adding items to your cart by browsing our products.</p>
-              <a class="btn " href="/shop"><i class="fi-rs-shopping-bag mr-10"></i>Browse Products</a>
+              <a class="btn" href="/shop"><i class="fi-rs-shopping-bag mr-10"></i>Browse Products</a>
+
             </div>
 
             <%} else{ %>
@@ -92,14 +93,19 @@
                   <td class="text-right" data-title="t">
                    <span id="subTotal-<%=item.item%>" class="subTotalVal">₹<%=subTotal?.totals[index]%></span> 
                   </td>
-                  <td class="action" data-title="Remove"><a href="#" class="text-muted" onclick="deleteProduct('<%=item._id%>','<%=item.item%>')"><i class="fi-rs-trash"></i></a></td>
+                  <td class="action" data-title="Remove">
+                    <a href="#" class="text-muted" onclick="deleteProduct('<%=item._id%>','<%=item.item%>')">
+                      <i class="fi-rs-trash" style="color: red; font-size: 20px;"></i>
+                    </a>
+                  </td>
+                  
                 </tr>
                 <% }); %>
               </tbody>
             </table>
           </div>
           <div class="cart-action text-end">
-            <a class="btn " href="/shop"><i class="fi-rs-shopping-bag mr-10"></i>Continue Shopping</a>
+            <a class="btn" href="/shop"><i class="fi-rs-shopping-bag mr-10"></i>Continue Shopping</a>
           </div>
           <div class="divider center_icon mt-50 mb-50"><i class="fi-rs-fingerprint"></i></div>
           <div class="row mb-50">
@@ -131,7 +137,7 @@
               <div class="heading_s1 mb-3">
                 <h4>Cart Totals</h4>
               </div>
-              <div class="table-responsive">
+              <!-- <div class="table-responsive">
                 <table class="table">
                   <tbody>
                     <tr>
@@ -153,8 +159,29 @@
                   </tbody>
                 </table>
              
+              </div> -->
+              <div class="table-responsive">
+                <table class="table">
+                  <tbody>
+                    <tr>
+                      <td class="cart_total_label">Cart Subtotal</td>
+                      <td class="cart_total_amount">₹<span class="font-lg fw-900 text-brand" id="total" style="color: black;"><%=total %></span></td>
+                    </tr>
+                    <tr>
+                      <td class="cart_total_label">Shipping</td>
+                      <td class="cart_total_amount"> <i class="ti-gift mr-5"></i> Free Shipping</td>
+                    </tr>
+                    <tr>
+                      <td class="cart_total_label">Total</td>
+                      <td class="cart_total_amount">₹<strong><span class="font-xl fw-900 text-brand" id="all-total" style="color: black;"><%=total %></span></strong></td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-              <a href="/check-out" class="btn "> <i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut</a>
+              
+              
+
+              <a class="btn" href="/check-out"><i class="fi-rs-shopping-bag mr-10"></i>Proceed To Checkout</a>
             </div>
             <%} %>
           </div>

@@ -145,7 +145,7 @@ new Chart("myChart3", {
 
 
 
-var xValues = ["COD", "Online"];
+var xValues = ["COD","Wallet","Online"];
 var yValues = [];
 let paymentData= JSON.parse(document.getElementById('payment').innerHTML)
 
@@ -155,13 +155,9 @@ console.log(yValues,"y");
 yValues.push(paymentData[0])
 
 yValues.push(paymentData[1])
+yValues.push(paymentData[2]);
 
-var barColors = [
-  "#b91d47",
-  "#00aba9",
-  "#2b5797",
-  
-];
+var barColors = ["#b91d47", "#00aba9", "#2b5797", "#e8c3b9", "#1e7145"];
 
 
 new Chart("myChart4", {

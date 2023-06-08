@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
+require("dotenv").config()
 mongoose.set('strictQuery',false)
-mongoose.connect('mongodb://127.0.0.1:27017/E-Commerce')
+mongoose.connect(process.env.MONGO_URL)
 .then(()=>console.log('........DataBase Connected Successfully.........'))
 .catch((err)=>console.log(err.message))
 

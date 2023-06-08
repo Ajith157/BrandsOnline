@@ -66,7 +66,6 @@ module.exports = {
         try {
             userHelper.dologin(req.body).then((response) => {
 
-                // userHelper.changeUserStatus()
                 req.session.user = response.users
                 let activeUser = req.session.user
 
@@ -106,43 +105,36 @@ module.exports = {
         let newlyAdded = await productModel.product.find().sort({ CreatedAt: -1 });
         if (req.session) {
             user = req.session.user;
-            console.log(user, "user in controller or hlper page");
+
             res.render("users/home", { user, bannerData, newlyAdded });
-            
+
         } else {
 
             res.render("users/home", { bannerData, newlyAdded });
         }
     },
-    //  GET SHOP
+
+    /* GET Shop Page. */
     getShop: async (req, res) => {
 
+        let user = req.session.user
 
+        if (req.query?.search || req.query?.sort || req.query?.filter) {
 
-        try {
-            let i = req.query.i;
-            let perPage = 10;
-            let docCount = await userHelper.documentCount();
+            const { product, currentPage, totalPages, noProductFound } = await userHelper.getQueriesOnShop(req.query)
+            noProductFound ?
+                req.session.noProductFound = noProductFound
+                : req.session.selectedProducts = product
+            res.render('users/shop', { layout: 'Layout', product, user, productResult: req.session.noProductFound })
+        } else {
 
-            let pages = Math.ceil(docCount / perPage)
-
-            let bannerData = await userHelper.getBannerData()
-
-            let user = req.session.user
-
-            // let shop = await userHelper.getShop();
-            let shop = await userHelper.pageView(perPage, i)
-
-
-            res.render('users/shop', { shop, user, bannerData, pages })
-        } catch (error) {
-            res.render("users/catchError", { message: error.message })
-
+            product = await userHelper.getShop()
+            if (product.length != 0)
+                req.session.noProductFound = false
+            res.render('users/shop', { layout: 'Layout', product, user, productResult: req.session.noProduct })
+            req.session.noProductFound = false
 
         }
-
-
-
     },
     //  GET OTP
     getOtppage: (req, res) => {
@@ -153,8 +145,10 @@ module.exports = {
     sendOtp: (req, res) => {
 
         var phone = Number(req.body.phonenumber)
-        userHelper.findUser(req.body.phone).then(async (user) => {
-            if (user) {
+        userHelper.findUser(req.body.phone).then(async (response) => {
+            let user = []
+            user.push(response)
+            if (response) {
                 req.session.user = user
                 res.json(true);
 
@@ -168,27 +162,30 @@ module.exports = {
         })
 
     },
-    // GET PRODUCT DETAILS
+
+
+    /* GET Product Detail Page. */
     getProductdetails: (req, res) => {
 
-        
+
         try {
             let proId = req.params.id
             let user = req.session.user
-    
+
             userHelper.getProductDetail(proId).then((product) => {
-    
+
                 res.render('users/productDetails', { product, user })
             })
-            
+
         } catch (error) {
             res.render("users/catchError", { message: error.message })
 
-            
+
         }
 
 
     },
+
 
     getDetails: (userId) => {
         try {
@@ -211,6 +208,7 @@ module.exports = {
             let count = await cartHelper.getCartCount(user[0]._id)
             const wishlistCount = await wishListHelper.getWishlistcount(user[0]._id)
             wishListHelper.getwishlistProducts(user[0]._id).then((wishlistProducts) => {
+
                 res.render('users/wishlist', { user, count, wishlistProducts, wishlistCount })
             })
 
@@ -283,7 +281,7 @@ module.exports = {
 
     sort: async (req, res) => {
 
-        console.log(req.params);
+
         const { id } = req.params;
 
         userHelper.sorting(id).then((products) => {
@@ -306,6 +304,8 @@ module.exports = {
             res.send(searchResult);
         });
     },
+
+
 
 
 
