@@ -121,11 +121,12 @@ module.exports = {
 
         if (req.query?.search || req.query?.sort || req.query?.filter) {
 
+            
             const { product, currentPage, totalPages, noProductFound } = await userHelper.getQueriesOnShop(req.query)
             noProductFound ?
                 req.session.noProductFound = noProductFound
                 : req.session.selectedProducts = product
-            res.render('users/shop', { layout: 'Layout', product, user, productResult: req.session.noProductFound })
+            res.render('users/shop', { product, user, productResult: req.session.noProductFound })
         } else {
 
             product = await userHelper.getShop()

@@ -200,7 +200,7 @@
     event.preventDefault();
     $.ajax({
       url: '/shop',
-      method: 'GET',
+      method: 'get',
       data: $('#formId').serialize() + '&page=' + pageNumber,
       success: function(response) {
        
