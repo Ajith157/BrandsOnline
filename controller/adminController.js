@@ -14,6 +14,8 @@ const cartHelper = require('../helpers/cartHelper')
 let admin
 module.exports = {
 
+
+  // get dashboard 
   getDashboard: async (req, res) => {
     let admin = req.session.admin;
     let totalProducts,
