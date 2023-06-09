@@ -40,7 +40,7 @@ module.exports = {
       req.session.Total = total
       let subTotal = await orderHelper.getSubTotal(userId)
       cartHelper.getCartItems(userId).then((cartItems) => {
-
+        console.log(cartItems);
 
 
         res.render('users/cart', { user, cartItems, count, total, subTotal })
