@@ -172,16 +172,20 @@ module.exports = {
   },
   //  POST ADD PRODUCT
   postAddproduct: (req, res) => {
+    console.log(req.body,'1');
 
     let file = req.files;
     const fileName = file.map((file) => {
+      console.log(req.body,'2');
       return file.filename;
     })
 
     const product = req.body;
     product.img = fileName;
+    console.log('3');
 
     adminHelper.postAddproduct(product).then(() => {
+      
       res.redirect('/admin/dashboard')
     })
   },

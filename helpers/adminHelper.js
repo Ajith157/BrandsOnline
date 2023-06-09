@@ -80,16 +80,18 @@ module.exports = {
   },
   // POST ADD PRODUCT
   postAddproduct: (data) => {
-
+     console.log(data,'333333333333');
     try {
       return new Promise((resolve, reject) => {
         let product = new db.product(data);
+        console.log(product,'444444444');
         product.save().then(() => {
           resolve()
         })
       })
     }
     catch (error) {
+      console.log("errrrrrrrrrrrrrr");
       console.log(error.message);
     }
   },
