@@ -347,7 +347,7 @@ module.exports = {
         },
       ]);
       resolve(response);
-      console.log(response, 'online');
+     
     });
   },
 

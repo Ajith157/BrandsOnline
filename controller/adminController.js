@@ -172,6 +172,8 @@ module.exports = {
   },
   //  POST ADD PRODUCT
   postAddproduct: (req, res) => {
+    console.log('wwwwwwwwwwwwwwwwwwwwwww');
+    console.log(req.file,'qqqqqqqqqqqqqqqq');
     console.log(req.body,'1');
 
     let file = req.files;
