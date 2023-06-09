@@ -1,42 +1,43 @@
 <div class="container">
-    <main class="main">
-      <section class="pt-150 pb-150">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-10 m-auto">
-              <div class="row">
-                <div class="col-lg-5 mx-auto">
-                  <div class="login_wrap widget-taber-content p-5 background-white border-radius-10 mb-md-5 mb-lg-0 mb-sm-5">
-                    <div class="padding_eight_all bg-white">
-                      <div class="heading_s1">
-                        <h3 class="mb-30" style="display: flex; justify-content: center; align-items: center;">Login</h3>
-                        <p id="errorEmail" class="text-danger"></p>
+  <main class="main">
+    <section class="pt-150 pb-150">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-10 m-auto">
+            <div class="row">
+              <div class="col-lg-5 mx-auto">
+                <div class="login_wrap widget-taber-content p-5 background-white border-radius-10 mb-md-5 mb-lg-0 mb-sm-5" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                  <div class="padding_eight_all bg-white">
+                    <div class="heading_s1" style="text-align: center;">
+                      <h3 class="mb-30">Login</h3>
+                      <p id="errorEmail" class="text-danger"></p>
+                    </div>
+                    <form id="loginPage" style="width: 100%;">
+                      <div class="form-group">
+                        <input type="text" id="email" required="" name="email" placeholder="Your Email">
+                        <p id="error1" class="text-danger"></p>
                       </div>
-                      <form id="loginPage">
-                        <div class="form-group">
-                          <input type="text" id="email" required="" name="email" placeholder="Your Email">
-                          <p id="error1" class="text-danger"></p>
-                        </div>
-                        <div class="form-group">
-                          <input required="" id="password" type="password" name="password" placeholder="Password">
-                          <p id="error2" class="text-danger"></p>
-                        </div>
-                        <div class="login_footer form-group">
-                          <div class="chek-form">
-                            <div class="custome-checkbox">
-                              <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="">
-                              <label class="form-check-label" for="exampleCheckbox1"><span>Remember me</span></label>
-                            </div>
+                      <div class="form-group">
+                        <input required="" id="password" type="password" name="password" placeholder="Password">
+                        <p id="error2" class="text-danger"></p>
+                      </div>
+                      <div class="login_footer form-group" style="display: flex; justify-content: center; align-items: center;">
+                        <div class="chek-form">
+                          <div class="custome-checkbox">
+                            <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="">
+                            <label class="form-check-label" for="exampleCheckbox1"><span>Remember me</span></label>
                           </div>
                         </div>
-                        <div>
-                          <a class="text-muted pb-3" style="display: flex; justify-content: center; align-items: center;" href="/otppage">Login with OTP</a>
-                        </div>
-                        <div class="form-group " style="display: flex; justify-content: center; align-items: center;">
-                          <button type="button" onclick="validate()" class="btn btn-fill-out btn-block hover-up" name="login">Log in</button>
-                        </div>
-                      </form>
-                      <a href="/signup" style="display: flex; justify-content: center; align-items: center;">
+                      </div>
+                      <div>
+                        <a class="text-muted pb-3" href="/otppage">Login with OTP</a>
+                      </div>
+                      <div class="form-group" style="display: flex; justify-content: center; align-items: center;">
+                        <button type="button" onclick="validate()" class="btn btn-fill-out btn-block hover-up" name="login">Log in</button>
+                      </div>
+                    </form>
+                    <div style="display: flex; justify-content: center; align-items: center;">
+                      <a href="/signup">
                         <button type="submit" class="btn btn-fill-out hover-up" name="login">Create Account</button>
                       </a>
                     </div>
@@ -46,9 +47,10 @@
             </div>
           </div>
         </div>
-      </section>
-    </main>
-  </div>
+      </div>
+    </section>
+  </main>
+</div>
 
 </section>
 
