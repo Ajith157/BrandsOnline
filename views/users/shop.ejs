@@ -202,7 +202,7 @@
       method: 'GET',
       data: $('#formId').serialize() + '&page=' + pageNumber,
       success: function(response) {
-        console.log(response)
+       
         if (response) {
           var $response = $(response);
           var $newProductGrid = $response.find('.product-grid-3');

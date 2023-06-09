@@ -27,8 +27,8 @@ module.exports = {
 
 
 
-
-                res.render('users/profile', { user, count, userData, address, orders })
+console.log(userData,'iiiiiiiiiiiiiiiiiiii');
+                res.render('users/profile', {user, count, userData, address, orders })
 
 
 

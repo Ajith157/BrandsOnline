@@ -178,7 +178,7 @@
   function cancelOrder(orderId,total) {
    
     // Show confirmation message using SweetAlert
-     swal({
+    swal({
       title: 'Are you sure?',
       text: 'You will not be able to recover this order!',
       icon: 'warning',
@@ -209,7 +209,7 @@
     function returnOrder(orderId,total) {
       console.log(orderId,total,'p');
 
-  swal({
+   new swal({
   title: 'Return Order',
   text: 'Are you sure you want to return this order?',
   icon: 'warning',
