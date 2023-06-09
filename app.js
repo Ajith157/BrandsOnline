@@ -10,6 +10,7 @@ const ConnectMongodbSession = require('connect-mongodb-session')
 const session = require("express-session");
 const mongodbSession = new ConnectMongodbSession(session)
 const multer = require('multer')
+const connectDB = require('./config/connection')
 //const session= require('express-session')
 
 
@@ -27,6 +28,12 @@ app.set('view engine', 'ejs');
                  
 // app.use(logger('dev'));
 app.use(express.json());
+
+
+
+
+
+
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -46,9 +53,19 @@ app.use(session({
 //app.use(session({secret:"Key",cookie:{maxAge:600000}}))
 app.use('/', usersRouter);
 app.use('/admin', adminRouter);
+
+const start = function () {  
+  try {
+    connectDB("mongodb+srv://ajithpr:nikhil@cluster0.6coep9u.mongodb.net/?retryWrites=true&w=majority").then((re)=> console.log(re)).catch((err) => console.log('érror ahnu',err))
+  }
+  catch (err) {
+    console.log(err);
+  }
+}
+start() 
  
 
-// app.listen(5000)
+app.listen(5000)
 
 
 
