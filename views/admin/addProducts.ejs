@@ -189,10 +189,6 @@
       // Validate the form inputs
       let isValid = true;
 
-      // Validate Product Name
-      // Validate Product Name
-      // Validate Product Name
-      // Validate Product Name
       if (nameInput.value.trim() === "") {
         isValid = false;
         document.getElementById("error1").textContent =
@@ -323,7 +319,9 @@
 
     function validateImage(fileInput) {
       const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif|\.avif|\.webp)$/i;
-      const maxSize = 5242880; // 5MB
+      // const maxSize = 5242880; // 5MB
+      const maxSize = 102400; // 100kb
+      
       const fileSize = fileInput.files[0].size;
 
       if (!allowedExtensions.exec(fileInput.value)) {
@@ -340,7 +338,7 @@
         swal({
           icon: 'error',
           title: 'Oops...',
-          text: 'File is too large. Please upload an image that is smaller than 5MB.',
+          text: 'File is too large. Please upload an image that is smaller than 100KB.',
         })
         fileInput.value = "";
         return false;
