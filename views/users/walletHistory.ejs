@@ -1,0 +1,102 @@
+<%- include('../partials/user-header')%>
+<style>
+  .order-list {
+      display: table;
+      width: 85%; /* Adjust the width as needed */
+      margin: 0 auto; /* Center the table horizontally */
+      border-collapse: collapse;
+      border-color: #ccc;
+  }
+
+  .order {
+      display: table-row;
+      border-bottom: 1px solid #ccc;
+  }
+
+  .product-list {
+      display: table-cell;
+      width: 40%; /* Adjust the width as needed */
+      padding: 10px;
+      border: 1px solid #ccc;
+      background-color: #eee;
+  }
+
+  .product {
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+  }
+
+  .product-image {
+      width: 60px; /* Adjust the width as needed */
+      height: 60px; /* Adjust the height as needed */
+  }
+
+  .order-list th {
+      background-color: #f0f0f0;
+      text-align: center;
+  }
+
+  .order-list td {
+      text-align: center;
+  }
+
+  /* Custom styles for the heading */
+  .order-heading {
+    text-align: center;
+    color: green;
+    margin-bottom: 20px; /* Adjust the margin-bottom value as needed */
+  }
+</style>
+
+<h1 class="order-heading">Wallet Payments</h1>
+
+<div class="order-list">
+  <table id="order-table" class="display">
+    <thead>
+      <tr>
+        <th>Product Image</th>
+        <th>Order ID</th>
+        <th>Product ID</th>
+        <th>Product Name</th>
+        <th>Quantity</th> 
+        <th>Payment Method</th>
+        <th>Payment Status</th>
+        <th>Date</th>
+        <th>Total Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% walletPayments.forEach(walletPayment => { %>
+        <% walletPayment.productDetails.forEach(product => { %>
+          <tr>
+            <td>
+              <% if (product.image && product.image.length > 0) { %>
+                <img src="/uploads/<%= product.image[0] %>" alt="Product Image" style="width: 60px; height: 60px;">
+              <% } else { %>
+                <span>No image available</span>
+              <% } %>
+            </td>
+            <td><%= walletPayment._id %></td>
+            <td><%= product.productId %></td>
+            <td><%= product.productName %></td>
+            <td><%= product.quantity %></td>
+            <td><%= walletPayment.paymentMethod %></td>
+            <td><%= walletPayment.paymentStatus %></td>
+            <td><%= walletPayment.createdAt.toISOString().split('T')[0] %></td> <!-- Display the date -->
+            <td><%= walletPayment.totalPrice %></td>
+          </tr>
+        <% }); %>
+      <% }); %>
+    </tbody>
+  </table>
+</div>
+
+
+
+<script src="https://cdn.datatables.net/1.11.2/js/jquery.dataTables.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#order-table').DataTable();
+  });
+</script>

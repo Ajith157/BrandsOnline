@@ -7,6 +7,7 @@ const productModel = require('../model/schema')
 const userModel = require('../model/schema')
 const Razorpay = require('razorpay')
 
+
 const keyId = process.env.key_id
 const keySecret = process.env.key_secret
 
@@ -507,7 +508,23 @@ module.exports = {
         }
     },
 
-    //cancel order
+    addWallet: (userId, total) => {
+
+        try {
+            return new Promise((resolve, reject) => {
+
+                cartModel.user.updateOne({ _id: userId },
+                    {
+                        $inc: { wallet: total }
+                    }).then((response) => {
+                        resolve(response)
+                    })
+            })
+        } catch (error) {
+            res.render("users/catchError", { message: error.message })
+        }
+    },
+      
     cancelOrder: (orderId) => {
         try {
             return new Promise((resolve, reject) => {
@@ -518,8 +535,10 @@ module.exports = {
                     );
 
                     let order = orders[0].orders.find((order) => order._id.toString() == orderId.toString());
+                   
+                    console.log(order, 'order')
 
-                    if (order.paymentMethod === 'razorpay' && order.paymentStatus === 'paid') {
+                    if (order.paymentMethod === 'razorpay' && order.paymentStatus === 'Pending') {
 
                         orderModel.Order.updateOne(
                             { 'orders._id': orderId },
@@ -527,11 +546,11 @@ module.exports = {
 
                                 $set: {
                                     ['orders.' + orderIndex + '.orderConfirm']: 'Canceled',
-                                    ['orders.' + orderIndex + '.paymentStatus']: 'Refunded'
+                                    ['orders.' + orderIndex + '.paymentStatus']: 'Refunded' 
                                 }
                             }
                         ).then((orders) => {
-
+                            orders.method = 'razorpay';
                             resolve(orders)
                         })
                     } else if (order.paymentMethod === 'COD' && order.orderConfirm === 'Delivered' && order.paymentStatus === 'paid') {
@@ -543,9 +562,9 @@ module.exports = {
                                     ['orders.' + orderIndex + '.paymentStatus']: 'Refunded'
                                 }
                             }
-                        ).then((orders) => {
+                        ).then((orders) => { 
 
-                            resolve(orders)
+                            resolve(orders);
                         })
                     } else {
                         orderModel.Order.updateOne(
@@ -569,8 +588,13 @@ module.exports = {
             res.render("users/catchError", { message: error.message })
         }
     },
+      
+     
+      
 
-    // return order
+      
+      
+    
     // return order
     returnOrder: (orderId) => {
         try {
@@ -607,9 +631,37 @@ module.exports = {
             res.render("users/catchError", { message: error.message })
         }
     },
-
-
-
+    getWalletPayments: () => {
+        return new Promise(async (resolve, reject) => {
+          try {
+            const walletPayments = await orderModel.Order.aggregate([
+              { $unwind: "$orders" },
+              { $match: { "orders.paymentMethod": "wallet" } },
+              {
+                $group: {
+                  _id: "$_id",
+                  orders: { $push: "$orders" }
+                }
+              }
+            ]);
+      
+            if (!walletPayments || walletPayments.length === 0) {
+              throw new Error('No wallet payments found');
+            }
+      
+            resolve(walletPayments[0].orders);
+          } catch (error) {
+            console.error('Failed to retrieve wallet payments:', error);
+            reject(new Error('Failed to retrieve wallet payments'));
+          }
+        });
+      },
+      
+      
+      
+      
+      
+      
 
     // change payment status
     changePaymentStatus: (userId, orderId) => {
@@ -981,24 +1033,9 @@ module.exports = {
     },
 
 
-    // wallet
-    addWallet: (userId, total) => {
+      
 
-        try {
-            return new Promise((resolve, reject) => {
-
-                cartModel.user.updateOne({ _id: userId },
-                    {
-                        $inc: { wallet: total }
-                    }).then((response) => {
-                        resolve(response)
-                    })
-            })
-        } catch (error) {
-            res.render("users/catchError", { message: error.message })
-        }
-    },
-
+      
     createData: (orders, product, address) => {
 
 

@@ -84,6 +84,8 @@ router.get("/sortCategory/:id", auth.userAuth, userController.sortCategory)
 // GET SEARCH
 router.post("/search", auth.userAuth, userController.search)
 
+router.get('/get-wallet-payments',auth.userAuth,orderController.getwalletPayment)
+
 
 
 

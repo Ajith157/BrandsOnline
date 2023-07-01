@@ -27,8 +27,8 @@ module.exports = {
 
 
 
-console.log(userData,'iiiiiiiiiiiiiiiiiiii');
-                res.render('users/profile', {user, count, userData, address, orders })
+
+                res.render('users/profile', { user, count, userData, address, orders })
 
 
 
@@ -188,6 +188,24 @@ console.log(userData,'iiiiiiiiiiiiiiiiiiii');
     },
 
 
+    getwalletPayment: (req, res) => {
+        let userId = req.session.user[0]._id;
+
+        orderHelper.getWalletPayments(userId)
+            .then(walletPayments => {
+                console.log(walletPayments, '444444444444444');
+                res.render('users/walletHistory', { walletPayments: walletPayments });
+            })
+            .catch(error => {
+                // Handle the error appropriately
+                res.render('error', { errorMessage: 'Failed to retrieve wallet payments' });
+            });
+    },
+
+
+
+
+
 
     verifyPayment: (req, res) => {
         orderHelper.verifyPayment(req.body).then(() => {
@@ -229,15 +247,14 @@ console.log(userData,'iiiiiiiiiiiiiiiiiiii');
         let total = parseInt(req.query.total);
         let userId = req.session.user[0]._id;
 
-
         orderHelper.cancelOrder(orderId).then((canceled) => {
-            orderHelper.addWallet(userId, total).then((walletStatus) => {
-
-                res.send(canceled)
-            })
-
+            if (canceled.method === 'razorpay') {
+                orderHelper.addWallet(userId, total)
+            }
+            res.send(canceled);
         })
     },
+
     // RETURN ORDER
     returnOrder: (req, res) => {
 
@@ -250,9 +267,9 @@ console.log(userData,'iiiiiiiiiiiiiiiiiiii');
 
         orderHelper.returnOrder(orderId, userId).then((returnOrderStatus) => {
 
-            orderHelper.addWallet(userId, total).then((walletStatus) => {
+            orderHelper.updatePaymentStatus(orderId, userId).then((paymentStatus) => {
+                orderHelper.addWallet(userId, total).then((walletStatus) => {
 
-                orderHelper.updatePaymentStatus(orderId, userId).then((paymentStatus) => {
                     res.send(returnOrderStatus)
 
                 })

@@ -102,18 +102,25 @@
             </div>
           </div>
           <div class="card-footer border-0 px-4 py-5" style="background-color: #e0bcce; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
-
             <% if (orders[0].orderConfirm === 'delivered') { %>
-            <button class="btn-info btn-lg" onclick="returnOrder('<%=orderId%>','<%=orders[0].totalPrice%>')">Return Product</button>
+              <% const currentDate = new Date(); %>
+              <% const orderDate = new Date(orders[0].createdAt); %>
+              <% const timeDifference = currentDate.getTime() - orderDate.getTime(); %>
+              <% const daysDifference = Math.floor(timeDifference / (1000 * 3600 * 24)); %>
+              <% if (daysDifference > 7) { %>
+                <div id="return-message" style="color: red; font-size: 1.2rem;">Cannot return this product now.</div>
+              <% } else { %>
+                <button class="btn-info btn-lg" onclick="returnOrder('<%=orderId%>','<%=orders[0].totalPrice%>')">Return Product</button>
+              <% } %>
             <% } else if (orders[0].orderConfirm === 'canceled') { %>
-            <div id="canceled-message" style="color: rgb(221, 21, 21); font-size: 1.2rem;">Order Canceled.</div>
+              <div id="canceled-message" style="color: rgb(221, 21, 21); font-size: 1.2rem;">Order Canceled.</div>
             <% } else if (orders[0].orderConfirm === 'returned') { %>
               <div id="returned-message" style="color: red; font-size: 1.2rem;">Order Returned.</div>
             <% } else { %>
-            <button class="btn-danger btn-lg mr-3" onclick="cancelOrder('<%=orderId%>','<%=orders[0].totalPrice%>')">Cancel</button>
+              <button class="btn-danger btn-lg mr-3" onclick="cancelOrder('<%=orderId%>','<%=orders[0].totalPrice%>')">Cancel</button>
             <% } %>
-
           </div>
+          
           <!-- Modal HTML -->
           <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" id="staticBackdrop">
             <div class="modal-dialog">

@@ -17,6 +17,7 @@ module.exports = {
 
   // get dashboard 
   getDashboard: async (req, res) => {
+    const dashboardActive='active'
     let admin = req.session.admin;
     let totalProducts,
       days = [];
@@ -99,6 +100,7 @@ module.exports = {
         ordersPerDay,
         paymentCount,
         category,
+        dashboardActive
       });
     });
 
@@ -134,9 +136,10 @@ module.exports = {
   },
   // GET USERLIST
   getUserlist: async (req, res) => {
+    const userActive='active'
     let admin = req.session.admin
     await adminHelper.getUser().then((user) => {
-      res.render('admin/userlist', { user, layout: 'adminLayout', admin })
+      res.render('admin/userlist', { user, layout: 'adminLayout', admin,userActive })
     })
   },
   // GET BLOCK USER
@@ -167,13 +170,14 @@ module.exports = {
   },
   // GET ADD PRODUCT
   getAddproduct: (req, res) => {
+    const productActive='active'
     let admin = req.session.admin
-    res.render('admin/addProducts', { layout: 'adminLayout', admin })
+    res.render('admin/addProducts', { layout: 'adminLayout', admin ,productActive})
   },
   //  POST ADD PRODUCT
   postAddproduct: (req, res) => {
-    console.log('wwwwwwwwwwwwwwwwwwwwwww');
-    console.log(req.file,'qqqqqqqqqqqqqqqq');
+    
+   
     console.log(req.body,'1');
 
     let file = req.files;
@@ -247,15 +251,17 @@ module.exports = {
   },
   // GET PRODUCT LIST
   getProductlist: async (req, res) => {
+    const product1Active='active'
     let admin = req.session.admin
     let product = await productModel.product.find()
-    res.render('admin/productlist', { layout: 'adminLayout', product, admin })
+    res.render('admin/productlist', { layout: 'adminLayout', product, admin, product1Active})
   },
   // GET ADD CATEGORY
   getAddcategory: async (req, res) => {
+    const categoryActive='active'
     let admin = req.session.admin
     let categories = await categoryModel.Category.find()
-    res.render('admin/addCategory', { layout: "adminLayout", categories, admin })
+    res.render('admin/addCategory', { layout: "adminLayout", categories, admin,categoryActive })
   },
   // POST ADD CATEGORY
   postAddcategory: (req, res) => {
@@ -287,8 +293,9 @@ module.exports = {
   },
 
   getAddCoupon: (req, res) => {
+    const couponActive='active'
     let admin = req.session.admin
-    res.render('admin/addcoupon', { layout: "adminLayout", admin })
+    res.render('admin/addcoupon', { layout: "adminLayout", admin,couponActive })
   },
 
   generatorCouponCode: (req, res) => {
@@ -313,15 +320,17 @@ module.exports = {
   },
   /* GET Coupon List Page. */
   getCouponList: (req, res) => {
+    const couponlistActive='active'
     let admin = req.session.admin
     couponHelper.getCouponList().then((couponList) => {
-      res.render('admin/couponList', { layout: "adminLayout", admin, couponList })
+      res.render('admin/couponList', { layout: "adminLayout", admin, couponList,couponlistActive })
     })
   },
   // GET ADD BANNER
   getAddBanner: (req, res) => {
+    const bannerActive='active'
     let admin = req.session.admin
-    res.render('admin/add-banner', { layout: "adminLayout", admin })
+    res.render('admin/add-banner', { layout: "adminLayout", admin,bannerActive })
   },
 
   // POST ADDBANNER
@@ -339,11 +348,12 @@ module.exports = {
   // GET BANNER LIST
 
   getBannerList: (req, res) => {
+    const banner1Active='active'
     let admin = req.session.admin
     adminHelper.getBannerList().then((banner) => {
 
 
-      res.render('admin/banner-list', { layout: 'adminLayout', admin, banner })
+      res.render('admin/banner-list', { layout: 'adminLayout', admin, banner,banner1Active })
     })
   },
   // GET EDIT BANNER
