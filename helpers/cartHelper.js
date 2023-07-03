@@ -23,7 +23,7 @@ module.exports = {
                 { user: new ObjectId(userId), "cartItems.productId": new ObjectId(proId) },
                 { $inc: { "cartItems.$.quantity": 1 } }
               ).then((response) => {
-                console.log(response);
+               
                 resolve({ response, status: false })
               })
             } else {
